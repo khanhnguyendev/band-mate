@@ -1,0 +1,48 @@
+{
+  "taskId": "om0z9t",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "om0z9t",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:24.894532Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Onboarding completes in under 3 minutes",
+            "completed": false
+          },
+          {
+            "text": "User sees recommended first task after completing onboarding",
+            "completed": false
+          },
+          {
+            "text": "Free trial credits are granted on completion",
+            "completed": false
+          }
+        ],
+        "description": "Short onboarding flow capturing target band, test date, weak skills, and motivation. Mascot introduces the platform. Free trial credits granted on completion.",
+        "labels": [
+          "onboarding",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "todo",
+        "title": "Module 2: Onboarding"
+      }
+    }
+  ]
+}

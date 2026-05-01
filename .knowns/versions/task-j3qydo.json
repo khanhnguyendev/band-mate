@@ -1,0 +1,52 @@
+{
+  "taskId": "j3qydo",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "j3qydo",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:25.123563Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Admin can inspect scoring job states (queued, running, failed, dead)",
+            "completed": false
+          },
+          {
+            "text": "Admin can retry failed jobs",
+            "completed": false
+          },
+          {
+            "text": "Admin can edit active quest reward values",
+            "completed": false
+          },
+          {
+            "text": "Admin can publish a new prompt pack version without redeploying",
+            "completed": false
+          }
+        ],
+        "description": "Manage question content and prompt packs. View AI usage, costs, failures, and refunds. Configure quest reward values and plan pricing. Inspect and retry scoring jobs.",
+        "labels": [
+          "admin",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "todo",
+        "title": "Module 13: Admin console"
+      }
+    }
+  ]
+}

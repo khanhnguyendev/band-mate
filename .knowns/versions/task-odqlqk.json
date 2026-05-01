@@ -1,0 +1,44 @@
+{
+  "taskId": "odqlqk",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "odqlqk",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:24.977138Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "medium"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can play media, answer questions, and receive results",
+            "completed": false
+          },
+          {
+            "text": "Completion can trigger quest rewards when eligible",
+            "completed": false
+          }
+        ],
+        "description": "Listening tasks with audio media and questions. Instant auto-scoring. Completions can trigger daily quest rewards. Phase 2 — gated behind feature flag in MVP.",
+        "labels": [
+          "listening",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "todo",
+        "title": "Module 6: Listening practice"
+      }
+    }
+  ]
+}

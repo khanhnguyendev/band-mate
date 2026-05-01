@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "knowns": {
+      "command": "knowns",
+      "args": ["mcp", "--stdio"]
+    }
+  }
+}

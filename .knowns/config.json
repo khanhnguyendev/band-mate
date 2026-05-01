@@ -1,0 +1,47 @@
+{
+  "name": "band-mate",
+  "id": "band-mate",
+  "createdAt": "2026-05-01T07:30:40.575653Z",
+  "settings": {
+    "defaultPriority": "medium",
+    "gitTrackingMode": "git-tracked",
+    "statuses": [
+      "todo",
+      "in-progress",
+      "in-review",
+      "done",
+      "blocked",
+      "on-hold",
+      "urgent"
+    ],
+    "statusColors": {
+      "blocked": "red",
+      "done": "green",
+      "in-progress": "blue",
+      "in-review": "purple",
+      "on-hold": "yellow",
+      "todo": "gray",
+      "urgent": "orange"
+    },
+    "visibleColumns": [
+      "todo",
+      "in-progress",
+      "blocked",
+      "done",
+      "in-review"
+    ],
+    "semanticSearch": {
+      "enabled": true,
+      "model": "bge-small-en-v1.5",
+      "huggingFaceId": "Xenova/bge-small-en-v1.5",
+      "dimensions": 384,
+      "maxTokens": 512
+    },
+    "platforms": [
+      "claude-code",
+      "opencode",
+      "agents"
+    ],
+    "enableChatUI": true
+  }
+}

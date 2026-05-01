@@ -1,0 +1,48 @@
+{
+  "taskId": "fd5p2l",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "fd5p2l",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:25.061044Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "medium"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can disable sound effects",
+            "completed": false
+          },
+          {
+            "text": "Sound never plays during Writing or Speaking exam flow",
+            "completed": false
+          },
+          {
+            "text": "Mascot only appears in purposeful, contextually appropriate moments",
+            "completed": false
+          }
+        ],
+        "description": "Friendly coach mascot with 6-8 emotional states. Appears in onboarding, quest completion, streak reminders, report summaries, and empty states. Optional sound design with silent exam mode.",
+        "labels": [
+          "ux",
+          "mascot"
+        ],
+        "priority": "medium",
+        "status": "todo",
+        "title": "Module 10: Mascot and UI delight"
+      }
+    }
+  ]
+}

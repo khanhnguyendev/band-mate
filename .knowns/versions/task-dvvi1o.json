@@ -1,0 +1,52 @@
+{
+  "taskId": "dvvi1o",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "dvvi1o",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:25.039415Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User sees daily quests and weekly challenge with progress",
+            "completed": false
+          },
+          {
+            "text": "Daily and weekly credit earning caps are enforced",
+            "completed": false
+          },
+          {
+            "text": "Only validated completions trigger rewards",
+            "completed": false
+          },
+          {
+            "text": "Admin can change reward values without redeploying",
+            "completed": false
+          }
+        ],
+        "description": "XP for broad learning activity. Credits earnable from low-cost validated actions (Reading, Listening, report review, drills). Daily quests, weekly challenges, streaks, badges, milestones. Daily and weekly earn caps. Anti-abuse rules.",
+        "labels": [
+          "gamification",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "todo",
+        "title": "Module 9: Gamification system"
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "taskId": "x9k47s",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "x9k47s",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:25.018591Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Dashboard loads key stats for the authenticated user",
+            "completed": false
+          },
+          {
+            "text": "Weakest skill and next recommended action are visible above the fold",
+            "completed": false
+          },
+          {
+            "text": "Streak, XP, and credit balance are accurate and real-time",
+            "completed": false
+          }
+        ],
+        "description": "Shows skill activity, latest reports, streak, XP, badges, quests, and credit balance. Learning trend and weak-area analysis. Weakest skill and next recommended action above the fold.",
+        "labels": [
+          "dashboard",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "todo",
+        "title": "Module 8: Dashboard and progress"
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "docPath": "specs/module-1-auth-and-accounts",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "docPath": "specs/module-1-auth-and-accounts",
+      "version": 1,
+      "timestamp": "2026-05-01T07:43:23.99735Z",
+      "changes": [
+        {
+          "field": "title",
+          "oldValue": null,
+          "newValue": "Module 1: Auth and Accounts"
+        },
+        {
+          "field": "description",
+          "oldValue": null,
+          "newValue": "Specification for authentication and account management — Supabase Auth, email/password, email verification required"
+        },
+        {
+          "field": "tags",
+          "oldValue": null,
+          "newValue": [
+            "spec",
+            "draft",
+            "auth",
+            "mvp"
+          ]
+        }
+      ],
+      "snapshot": {
+        "content": "## Overview\n\nAuthentication and account management for Band Mate learners. Users register with email and password, verify their email before accessing the platform, and can log in, log out, and reset their password. Supabase Auth handles token issuance and session management. The NestJS API validates Supabase JWTs on every protected request. A user profile row is created in the app database on first successful login.\n\n## Locked Decisions\n\n- D1: **Supabase Auth** — Supabase issues and validates tokens. NestJS verifies the Supabase JWT on each protected request using the Supabase JWT secret. Passwords are never stored in the app database.\n- D2: **Email/password only** — No social login (Google, GitHub, etc.) in MVP. Deferred to a later phase.\n- D3: **Email verification required** — Unverified users cannot access protected routes. Supabase sends the verification email automatically on registration.\n\n## Requirements\n\n### Functional Requirements\n\n- FR-1: User can register with name, email, and password\n- FR-2: Registration triggers a Supabase-sent email verification link\n- FR-3: Unverified users who attempt to log in receive a clear \"please verify your email\" message and cannot proceed\n- FR-4: Verified user can log in with email and password and receives a Supabase session (access token + refresh token)\n- FR-5: On first successful login, the API creates a `users` row in the app DB if one does not already exist (name, email, role: learner)\n- FR-6: User can log out, which invalidates the Supabase session\n- FR-7: User can request a password reset email from the login page\n- FR-8: User can set a new password via the link in the reset email\n- FR-9: Every NestJS protected route validates the Supabase JWT and rejects missing, expired, or invalid tokens with 401\n- FR-10: User profile stores: name, email, target band, study goal, weak skills (editable after onboarding)\n\n### Non-Functional Requirements\n\n- NFR-1: Register and login pages are server-rendered (Next.js SSR) — accessible without JavaScript\n- NFR-2: Rate limiting on `/auth/register` and `/auth/login` — 10 requests per minute per IP\n- NFR-3: Passwords are never stored or logged in the app database or API logs\n- NFR-4: Auth pages redirect authenticated users to the dashboard\n\n## Acceptance Criteria\n\n- [ ] AC-1: User can register with name, email, and password and receives a verification email\n- [ ] AC-2: Unverified user attempting to log in sees \"Please verify your email before logging in\" and cannot reach the dashboard\n- [ ] AC-3: Verified user can log in and is redirected to the dashboard\n- [ ] AC-4: On first login, a `users` row is created in the app DB with name, email, and role `learner`\n- [ ] AC-5: Protected API routes return `401 Unauthorized` for requests with no token\n- [ ] AC-6: Protected API routes return `401 Unauthorized` for requests with an expired or invalid token\n- [ ] AC-7: User can request a password reset and receives an email with a reset link\n- [ ] AC-8: User can set a new password via the reset link and then log in with the new password\n- [ ] AC-9: Logged-out user's token is invalidated — subsequent requests with that token return `401`\n- [ ] AC-10: Register and login pages redirect to dashboard if the user is already authenticated\n\n## Scenarios\n\n### Scenario 1: New user registers and logs in (happy path)\n**Given** a visitor on the register page\n**When** they submit name, email, and password\n**Then** they see a \"Check your email to verify your account\" confirmation page\n**And** they receive a verification email from Supabase\n\n**When** they click the verification link\n**Then** their email is marked verified in Supabase\n\n**When** they log in with their credentials\n**Then** they are redirected to the dashboard\n**And** a `users` row exists in the app DB\n\n### Scenario 2: Unverified user tries to log in\n**Given** a user who registered but has not verified their email\n**When** they attempt to log in\n**Then** they see \"Please verify your email before logging in\"\n**And** they are not redirected to the dashboard\n\n### Scenario 3: Wrong password\n**Given** a registered verified user\n**When** they log in with an incorrect password\n**Then** they see \"Invalid email or password\" (no hint about which field is wrong)\n\n### Scenario 4: Password reset\n**Given** a verified user who forgot their password\n**When** they enter their email on the password reset page\n**Then** they receive a reset email\n**When** they click the link and submit a new password\n**Then** they can log in with the new password\n\n### Scenario 5: Expired token on API call\n**Given** an authenticated user whose access token has expired\n**When** the Next.js client makes an API call\n**Then** the client silently refreshes the token using the Supabase refresh token\n**And** the API call succeeds\n\n### Scenario 6: Already authenticated user visits login page\n**Given** a user who is already logged in\n**When** they navigate to `/login` or `/register`\n**Then** they are immediately redirected to `/dashboard`\n\n## Technical Notes\n\n- Use `@supabase/ssr` package for Next.js App Router cookie-based session management\n- NestJS guard reads the `Authorization: Bearer \u003csupabase_access_token\u003e` header and verifies it using `SUPABASE_JWT_SECRET`\n- The `users` table in the app DB is keyed on `supabase_user_id` (UUID from Supabase Auth), not a separate generated ID\n- Session refresh is handled client-side by the Supabase JS SDK automatically\n- Password reset and email verification emails are configured in the Supabase dashboard (template and redirect URLs)\n\n## Open Questions\n\n- [ ] What is the minimum password length/complexity rule? (Supabase default is 6 chars — do we want stricter?)\n- [ ] Should we resend verification email on request, or direct users to Supabase's default resend flow?\n",
+        "description": "Specification for authentication and account management — Supabase Auth, email/password, email verification required",
+        "tags": [
+          "spec",
+          "draft",
+          "auth",
+          "mvp"
+        ],
+        "title": "Module 1: Auth and Accounts"
+      }
+    }
+  ]
+}

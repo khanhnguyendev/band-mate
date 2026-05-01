@@ -1,0 +1,47 @@
+{
+  "taskId": "wpvqow",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "wpvqow",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:25.102767Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "medium"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can control notification preferences",
+            "completed": false
+          },
+          {
+            "text": "Time-sensitive reminders respect the user's timezone",
+            "completed": false
+          },
+          {
+            "text": "Report-ready notification is sent when a scoring job completes",
+            "completed": false
+          }
+        ],
+        "description": "Email and in-app reminders for streak breaks and unfinished tasks. Report-ready notifications. Mascot-toned copy. User-controllable preferences with timezone support.",
+        "labels": [
+          "notifications"
+        ],
+        "priority": "medium",
+        "status": "todo",
+        "title": "Module 12: Notifications"
+      }
+    }
+  ]
+}

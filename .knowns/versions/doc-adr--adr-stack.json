@@ -1,0 +1,39 @@
+{
+  "docPath": "adr/adr-stack",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "docPath": "adr/adr-stack",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:24.807211Z",
+      "changes": [
+        {
+          "field": "title",
+          "oldValue": null,
+          "newValue": "ADR: Stack"
+        },
+        {
+          "field": "description",
+          "oldValue": null,
+          "newValue": "Decision record: Next.js + NestJS as core stack"
+        },
+        {
+          "field": "tags",
+          "oldValue": null,
+          "newValue": [
+            "adr"
+          ]
+        }
+      ],
+      "snapshot": {
+        "content": "# ADR 0002: Next.js + NestJS as Core Stack\n\n**Date:** 2026-05-01\n**Status:** Accepted\n\n---\n\n## Context\n\nBand Mate requires a web frontend with server-side rendering for dashboard and report pages, a client-side audio recorder for speaking submissions, and a backend that orchestrates async AI scoring, a credit wallet, and queue workers. The platform targets desktop and mobile web only in v1.\n\n## Decision\n\nUse **Next.js** (App Router) for the frontend and **NestJS** as the backend API and worker host. Both in TypeScript. The two apps live in a monorepo managed by pnpm workspaces, sharing a `packages/shared` library for types and validation schemas.\n\n## Alternatives Considered\n\n- **Full Next.js with Route Handlers only** — Next.js Route Handlers can handle simple API calls, but they are not well-suited for long-running queue workers, background job orchestration, or complex service layering required by the wallet and scoring pipeline. Ruling out.\n- **Express instead of NestJS** — Express is lower ceremony but lacks built-in module structure, DI, and decorator-based validation. NestJS conventions reduce architectural drift across a growing team. Ruling out.\n- **Remix + Fastify** — Viable, but the team has more Next.js and NestJS experience. Switching would slow initial delivery without a clear technical advantage. Ruling out.\n- **SvelteKit + Hono** — Smaller bundle, faster runtime, but steeper learning curve and a smaller ecosystem of IELTS/education UI libraries. Ruling out for v1.\n\n## Consequences\n\n- TypeScript end-to-end reduces runtime type mismatches between frontend and backend.\n- NestJS DI and module system makes the wallet, scoring, and entitlement services independently testable.\n- Next.js App Router server components allow dashboard and report pages to be rendered on the server, reducing client-side JavaScript.\n- Monorepo with pnpm workspaces simplifies shared type management but adds some CI pipeline complexity.\n- Both frameworks have large ecosystems; hiring and onboarding are easier.",
+        "description": "Decision record: Next.js + NestJS as core stack",
+        "tags": [
+          "adr"
+        ],
+        "title": "ADR: Stack"
+      }
+    }
+  ]
+}

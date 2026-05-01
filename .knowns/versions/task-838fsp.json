@@ -1,0 +1,48 @@
+{
+  "taskId": "838fsp",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "838fsp",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:24.997521Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can reopen any past report",
+            "completed": false
+          },
+          {
+            "text": "User can compare current vs previous report for the same skill",
+            "completed": false
+          },
+          {
+            "text": "Recommendations can be converted to personal improvement tasks",
+            "completed": false
+          }
+        ],
+        "description": "Every scored submission creates a report. Reports show overall band, criterion detail, evidence-based explanation, strengths, weaknesses, and improvement tasks. Historical comparison supported.",
+        "labels": [
+          "reports",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "todo",
+        "title": "Module 7: Reports and improvement plans"
+      }
+    }
+  ]
+}

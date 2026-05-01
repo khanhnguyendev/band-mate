@@ -1,0 +1,53 @@
+{
+  "taskId": "bsrznd",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "bsrznd",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:25.082109Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "high"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Credit cost is shown to the user before each premium action",
+            "completed": false
+          },
+          {
+            "text": "Credits cannot go below zero",
+            "completed": false
+          },
+          {
+            "text": "Failed scoring jobs trigger automatic refund",
+            "completed": false
+          },
+          {
+            "text": "Bonus credits expire after the configured window",
+            "completed": false
+          }
+        ],
+        "description": "Free / Starter / Pro plans with monthly credit grants. Credit top-ups via Stripe. Reserve/consume/refund wallet model backed by append-only ledger. Bonus credits with expiry. Credit cost shown before each premium action.",
+        "labels": [
+          "billing",
+          "wallet",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "todo",
+        "title": "Module 11: Plans, pricing, and wallet"
+      }
+    }
+  ]
+}

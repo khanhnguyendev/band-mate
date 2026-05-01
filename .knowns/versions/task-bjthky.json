@@ -1,0 +1,48 @@
+{
+  "taskId": "bjthky",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "bjthky",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:24.957573Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": null,
+          "newValue": "todo"
+        },
+        {
+          "field": "priority",
+          "oldValue": null,
+          "newValue": "medium"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can complete a Reading set end to end",
+            "completed": false
+          },
+          {
+            "text": "Score is instant",
+            "completed": false
+          },
+          {
+            "text": "User can earn small bonus credits from validated completion",
+            "completed": false
+          }
+        ],
+        "description": "Reading sets with questions and answer keys. Instant auto-scoring on submit. Eligible completions earn small bonus credits. Phase 2 — gated behind feature flag in MVP.",
+        "labels": [
+          "reading",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "todo",
+        "title": "Module 5: Reading practice"
+      }
+    }
+  ]
+}

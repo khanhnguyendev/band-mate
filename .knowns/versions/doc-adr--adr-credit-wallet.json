@@ -1,0 +1,39 @@
+{
+  "docPath": "adr/adr-credit-wallet",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "docPath": "adr/adr-credit-wallet",
+      "version": 1,
+      "timestamp": "2026-05-01T07:35:24.853989Z",
+      "changes": [
+        {
+          "field": "title",
+          "oldValue": null,
+          "newValue": "ADR: Credit Wallet"
+        },
+        {
+          "field": "description",
+          "oldValue": null,
+          "newValue": "Decision record: reserve/consume/refund credit wallet model"
+        },
+        {
+          "field": "tags",
+          "oldValue": null,
+          "newValue": [
+            "adr"
+          ]
+        }
+      ],
+      "snapshot": {
+        "content": "# ADR 0004: Reserve/Consume/Refund Credit Wallet Model\n\n**Date:** 2026-05-01\n**Status:** Accepted\n\n---\n\n## Context\n\nWriting and Speaking AI scoring is the main cost center. Each scored submission triggers an LLM API call that costs real money. If credits are only deducted after scoring succeeds, a user could exploit a race condition to submit more jobs than their balance allows. If credits are deducted before scoring and the job fails, users lose credits unfairly.\n\nThe wallet must also support multiple credit pools (plan-granted credits, purchased top-ups, gamification-earned bonus credits with expiry), and all mutations must be auditable.\n\n## Decision\n\nUse a **reserve → consume → refund** model implemented with an append-only ledger:\n\n1. **Reserve:** Before enqueuing a scoring job, create a `reserve` ledger entry and reduce available balance. If balance is insufficient, return `402` immediately — no job is created.\n2. **Consume:** After the scoring job succeeds, create a `consume` ledger entry converting the reservation to a permanent deduction.\n3. **Refund:** If the scoring job fails after exhausting retries, create a `refund` ledger entry restoring the reserved amount.\n\nAll ledger writes use a unique `idempotency_key` (derived from `submissionId + type`) to prevent double-processing if a worker retries.\n\nAll wallet mutations run inside PostgreSQL **serializable transactions** to prevent two concurrent submissions from both seeing sufficient balance when only one can be allowed.\n\nBonus credits (earned via gamification) are tracked in a separate `bonus_balance` column and have an expiry date. They are consumed first.\n\n## Alternatives Considered\n\n- **Deduct only on success** — Simple but vulnerable to concurrent over-spend; a user with 2 credits could submit 10 jobs simultaneously. Ruled out.\n- **Optimistic locking on wallet row** — Requires retry logic at the application layer; more complex than serializable transactions and prone to starvation under high concurrency. Ruled out.\n- **External payment-style escrow** — Overkill for in-app credits; adds latency. Ruled out.\n- **Simple counter with DB constraint (balance \u003e= 0)** — Does not support the idempotency and auditability requirements. Does not cleanly model the reserve/refund lifecycle. Ruled out.\n\n## Consequences\n\n- Users see an accurate real-time balance including reserved (in-flight) credits.\n- Credit over-spend is impossible at the database level.\n- Every credit event is auditable via the ledger; admin can reconstruct wallet state at any point in time.\n- Serializable transactions add some write latency under high concurrency, but submission rates per user are low enough that this is not a bottleneck.\n- Refund logic must be tested thoroughly — it is the failure path that protects user trust.",
+        "description": "Decision record: reserve/consume/refund credit wallet model",
+        "tags": [
+          "adr"
+        ],
+        "title": "ADR: Credit Wallet"
+      }
+    }
+  ]
+}
