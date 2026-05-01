@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common'
+import { Body, Controller, Get, Patch } from '@nestjs/common'
 import { User as SupabaseUser } from '@supabase/supabase-js'
+import { OnboardingSchema } from '@band-mate/shared'
 import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { UsersService } from './users.service'
 
@@ -10,6 +11,18 @@ export class UsersController {
   @Get('me')
   async me(@CurrentUser() supabaseUser: SupabaseUser) {
     const user = await this.users.findOrCreate(supabaseUser)
+    return this.toResponse(user)
+  }
+
+  @Patch('onboarding')
+  async onboarding(@CurrentUser() supabaseUser: SupabaseUser, @Body() body: unknown) {
+    const dto = OnboardingSchema.parse(body)
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    const user = await this.users.completeOnboarding(appUser.id, dto)
+    return this.toResponse(user)
+  }
+
+  private toResponse(user: Awaited<ReturnType<UsersService['findOrCreate']>>) {
     return {
       user: {
         id: user.id,

@@ -1,6 +1,6 @@
 {
   "taskId": "om0z9t",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,16 +22,16 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "Onboarding completes in under 3 minutes",
-            "completed": false
+            "completed": false,
+            "text": "Onboarding completes in under 3 minutes"
           },
           {
-            "text": "User sees recommended first task after completing onboarding",
-            "completed": false
+            "completed": false,
+            "text": "User sees recommended first task after completing onboarding"
           },
           {
-            "text": "Free trial credits are granted on completion",
-            "completed": false
+            "completed": false,
+            "text": "Free trial credits are granted on completion"
           }
         ],
         "description": "Short onboarding flow capturing target band, test date, weak skills, and motivation. Mascot introduces the platform. Free trial credits granted on completion.",
@@ -41,6 +41,168 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 2: Onboarding"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "om0z9t",
+      "version": 2,
+      "timestamp": "2026-05-01T12:45:32.738635Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "Onboarding completes in under 3 minutes"
+          },
+          {
+            "completed": false,
+            "text": "User sees recommended first task after completing onboarding"
+          },
+          {
+            "completed": false,
+            "text": "Free trial credits are granted on completion"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Short onboarding flow capturing target band, test date, weak skills, and motivation. Mascot introduces the platform. Free trial credits granted on completion.",
+        "labels": [
+          "onboarding",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 2: Onboarding"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "om0z9t",
+      "version": 3,
+      "timestamp": "2026-05-01T12:46:56.167875Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Shared: add OnboardingSchema + OnboardingPayload type in packages/shared/src/schemas/onboarding.ts (targetBand, testDate?, weakSkills[], motivation)\n2. API: create WalletModule + WalletService with grant(userId, amount, description, idempotencyKey) — serializable transaction, ledger append-only, balance never \u003c 0\n3. API: add UsersService.completeOnboarding(userId, dto) — saves profile fields + calls WalletService.grant with idempotency key `onboarding:{userId}` (3 trial credits); add PATCH /v1/users/onboarding endpoint to UsersController\n4. Web: /onboarding 4-step wizard — target band → test date → weak skills → motivation; mascot greeting on step 1; calls PATCH /v1/users/onboarding on final step; redirects to /dashboard?welcome=1\n5. Web: onboarding gate — dashboard server component fetches /v1/users/me; if onboardingCompletedAt is null redirect to /onboarding; also guard /onboarding to redirect already-onboarded users to /dashboard\n6. Web: welcome banner + recommended first task — dashboard shows \"Start here\" card based on weakSkills[0] when ?welcome=1 query param present\n7. Tests: WalletService.grant() unit spec (happy path + idempotency no-op) + UsersController PATCH /onboarding unit spec"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "Onboarding completes in under 3 minutes"
+          },
+          {
+            "completed": false,
+            "text": "User sees recommended first task after completing onboarding"
+          },
+          {
+            "completed": false,
+            "text": "Free trial credits are granted on completion"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Short onboarding flow capturing target band, test date, weak skills, and motivation. Mascot introduces the platform. Free trial credits granted on completion.",
+        "implementationPlan": "1. Shared: add OnboardingSchema + OnboardingPayload type in packages/shared/src/schemas/onboarding.ts (targetBand, testDate?, weakSkills[], motivation)\n2. API: create WalletModule + WalletService with grant(userId, amount, description, idempotencyKey) — serializable transaction, ledger append-only, balance never \u003c 0\n3. API: add UsersService.completeOnboarding(userId, dto) — saves profile fields + calls WalletService.grant with idempotency key `onboarding:{userId}` (3 trial credits); add PATCH /v1/users/onboarding endpoint to UsersController\n4. Web: /onboarding 4-step wizard — target band → test date → weak skills → motivation; mascot greeting on step 1; calls PATCH /v1/users/onboarding on final step; redirects to /dashboard?welcome=1\n5. Web: onboarding gate — dashboard server component fetches /v1/users/me; if onboardingCompletedAt is null redirect to /onboarding; also guard /onboarding to redirect already-onboarded users to /dashboard\n6. Web: welcome banner + recommended first task — dashboard shows \"Start here\" card based on weakSkills[0] when ?welcome=1 query param present\n7. Tests: WalletService.grant() unit spec (happy path + idempotency no-op) + UsersController PATCH /onboarding unit spec",
+        "labels": [
+          "onboarding",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 2: Onboarding"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "om0z9t",
+      "version": 4,
+      "timestamp": "2026-05-01T12:56:28.756183Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Implemented: OnboardingSchema (shared), WalletService.grant() with idempotency, UsersService.completeOnboarding() + PATCH /v1/users/onboarding, 4-step wizard at /onboarding, dashboard onboarding gate + welcome banner. Fixed pre-existing guard spec bugs (clearAllMocks → resetAllMocks, stable request reference). 11/11 tests pass."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Onboarding completes in under 3 minutes"
+          },
+          {
+            "completed": true,
+            "text": "User sees recommended first task after completing onboarding"
+          },
+          {
+            "completed": true,
+            "text": "Free trial credits are granted on completion"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Short onboarding flow capturing target band, test date, weak skills, and motivation. Mascot introduces the platform. Free trial credits granted on completion.",
+        "implementationNotes": "Implemented: OnboardingSchema (shared), WalletService.grant() with idempotency, UsersService.completeOnboarding() + PATCH /v1/users/onboarding, 4-step wizard at /onboarding, dashboard onboarding gate + welcome banner. Fixed pre-existing guard spec bugs (clearAllMocks → resetAllMocks, stable request reference). 11/11 tests pass.",
+        "implementationPlan": "1. Shared: add OnboardingSchema + OnboardingPayload type in packages/shared/src/schemas/onboarding.ts (targetBand, testDate?, weakSkills[], motivation)\n2. API: create WalletModule + WalletService with grant(userId, amount, description, idempotencyKey) — serializable transaction, ledger append-only, balance never \u003c 0\n3. API: add UsersService.completeOnboarding(userId, dto) — saves profile fields + calls WalletService.grant with idempotency key `onboarding:{userId}` (3 trial credits); add PATCH /v1/users/onboarding endpoint to UsersController\n4. Web: /onboarding 4-step wizard — target band → test date → weak skills → motivation; mascot greeting on step 1; calls PATCH /v1/users/onboarding on final step; redirects to /dashboard?welcome=1\n5. Web: onboarding gate — dashboard server component fetches /v1/users/me; if onboardingCompletedAt is null redirect to /onboarding; also guard /onboarding to redirect already-onboarded users to /dashboard\n6. Web: welcome banner + recommended first task — dashboard shows \"Start here\" card based on weakSkills[0] when ?welcome=1 query param present\n7. Tests: WalletService.grant() unit spec (happy path + idempotency no-op) + UsersController PATCH /onboarding unit spec",
+        "labels": [
+          "onboarding",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 2: Onboarding"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "om0z9t",
+      "version": 5,
+      "timestamp": "2026-05-01T12:56:35.210161Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Onboarding completes in under 3 minutes",
+            "completed": true
+          },
+          {
+            "text": "User sees recommended first task after completing onboarding",
+            "completed": true
+          },
+          {
+            "text": "Free trial credits are granted on completion",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Short onboarding flow capturing target band, test date, weak skills, and motivation. Mascot introduces the platform. Free trial credits granted on completion.",
+        "implementationNotes": "Implemented: OnboardingSchema (shared), WalletService.grant() with idempotency, UsersService.completeOnboarding() + PATCH /v1/users/onboarding, 4-step wizard at /onboarding, dashboard onboarding gate + welcome banner. Fixed pre-existing guard spec bugs (clearAllMocks → resetAllMocks, stable request reference). 11/11 tests pass.",
+        "implementationPlan": "1. Shared: add OnboardingSchema + OnboardingPayload type in packages/shared/src/schemas/onboarding.ts (targetBand, testDate?, weakSkills[], motivation)\n2. API: create WalletModule + WalletService with grant(userId, amount, description, idempotencyKey) — serializable transaction, ledger append-only, balance never \u003c 0\n3. API: add UsersService.completeOnboarding(userId, dto) — saves profile fields + calls WalletService.grant with idempotency key `onboarding:{userId}` (3 trial credits); add PATCH /v1/users/onboarding endpoint to UsersController\n4. Web: /onboarding 4-step wizard — target band → test date → weak skills → motivation; mascot greeting on step 1; calls PATCH /v1/users/onboarding on final step; redirects to /dashboard?welcome=1\n5. Web: onboarding gate — dashboard server component fetches /v1/users/me; if onboardingCompletedAt is null redirect to /onboarding; also guard /onboarding to redirect already-onboarded users to /dashboard\n6. Web: welcome banner + recommended first task — dashboard shows \"Start here\" card based on weakSkills[0] when ?welcome=1 query param present\n7. Tests: WalletService.grant() unit spec (happy path + idempotency no-op) + UsersController PATCH /onboarding unit spec",
+        "labels": [
+          "onboarding",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 2: Onboarding"
       }
     }

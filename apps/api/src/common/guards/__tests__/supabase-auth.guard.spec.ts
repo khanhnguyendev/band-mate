@@ -4,18 +4,17 @@ import { SupabaseAuthGuard } from '../supabase-auth.guard'
 
 const mockGetUser = jest.fn()
 const mockSupabaseService = { getUser: mockGetUser }
-const mockReflector = { getAllAndOverride: jest.fn().mockReturnValue(false) }
+const mockReflector = { getAllAndOverride: jest.fn() }
 
 function makeContext(token?: string): ExecutionContext {
+  const request: Record<string, unknown> = {
+    headers: token ? { authorization: `Bearer ${token}` } : {},
+    user: undefined,
+  }
   return {
     getHandler: jest.fn(),
     getClass: jest.fn(),
-    switchToHttp: () => ({
-      getRequest: () => ({
-        headers: token ? { authorization: `Bearer ${token}` } : {},
-        user: undefined,
-      }),
-    }),
+    switchToHttp: () => ({ getRequest: () => request }),
   } as unknown as ExecutionContext
 }
 
@@ -23,8 +22,9 @@ describe('SupabaseAuthGuard', () => {
   let guard: SupabaseAuthGuard
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    guard = new SupabaseAuthGuard(mockSupabaseService as any, mockReflector as any)
+    jest.resetAllMocks()
+    mockReflector.getAllAndOverride.mockReturnValue(false)
+    guard = new SupabaseAuthGuard(mockSupabaseService as any, mockReflector as unknown as Reflector)
   })
 
   it('allows @Public() routes without token', async () => {
@@ -42,7 +42,7 @@ describe('SupabaseAuthGuard', () => {
     await expect(guard.canActivate(makeContext('bad-token'))).rejects.toThrow(UnauthorizedException)
   })
 
-  it('throws 401 with email message when email not verified (AC-2)', async () => {
+  it('throws 401 with email message when email not confirmed (AC-2)', async () => {
     mockGetUser.mockResolvedValue({ id: 'uuid', email_confirmed_at: null })
     await expect(guard.canActivate(makeContext('valid-token'))).rejects.toThrow(
       'Please verify your email before logging in',

@@ -6,6 +6,7 @@ import { SupabaseAuthGuard } from './common/guards/supabase-auth.guard'
 import { PrismaModule } from './prisma/prisma.module'
 import { SupabaseModule } from './supabase/supabase.module'
 import { UsersModule } from './users/users.module'
+import { WalletModule } from './wallet/wallet.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UsersModule } from './users/users.module'
     PrismaModule,
     SupabaseModule,
     UsersModule,
+    WalletModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
