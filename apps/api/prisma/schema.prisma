@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+}
+
+enum UserRole {
+  learner
+  admin
+}
+
+enum Skill {
+  writing
+  speaking
+  reading
+  listening
+}
+
+// Users are created in Supabase Auth; this table stores app-level profile data.
+// supabase_user_id is the UUID from Supabase Auth — it is the primary identifier.
+model User {
+  id                    String    @id @default(uuid())
+  supabaseUserId        String    @unique @map("supabase_user_id")
+  email                 String    @unique
+  name                  String
+  role                  UserRole  @default(learner)
+  targetBand            Decimal?  @map("target_band") @db.Decimal(2, 1)
+  testDate              DateTime? @map("test_date") @db.Date
+  weakSkills            Skill[]   @map("weak_skills")
+  motivation            String?
+  onboardingCompletedAt DateTime? @map("onboarding_completed_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  wallet       Wallet?
+  subscription Subscription?
+
+  @@map("users")
+}
+
+model Plan {
+  id                 String   @id @default(uuid())
+  name               String   @unique
+  monthlyCredits     Int      @map("monthly_credit_grant")
+  writingCreditCost  Int      @map("writing_credit_cost")
+  speakingCreditCost Int      @map("speaking_credit_cost")
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id                   String   @id @default(uuid())
+  userId               String   @unique @map("user_id")
+  planId               String   @map("plan_id")
+  status               String   @default("active")
+  currentPeriodStart   DateTime @map("current_period_start")
+  currentPeriodEnd     DateTime @map("current_period_end")
+  stripeSubscriptionId String?  @map("stripe_subscription_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+
+  @@map("subscriptions")
+}
+
+model Wallet {
+  id             String    @id @default(uuid())
+  userId         String    @unique @map("user_id")
+  balance        Int       @default(0)
+  bonusBalance   Int       @default(0) @map("bonus_balance")
+  bonusExpiresAt DateTime? @map("bonus_expires_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  user    User           @relation(fields: [userId], references: [id])
+  entries LedgerEntry[]
+
+  @@map("wallets")
+}
+
+enum LedgerEntryType {
+  reserve
+  consume
+  refund
+  grant
+  topup
+  expire
+}
+
+model LedgerEntry {
+  id             String          @id @default(uuid())
+  walletId       String          @map("wallet_id")
+  type           LedgerEntryType
+  amount         Int
+  balanceAfter   Int             @map("balance_after")
+  description    String
+  referenceId    String?         @map("reference_id") @db.Uuid
+  idempotencyKey String          @unique @map("idempotency_key")
+  createdAt      DateTime        @default(now()) @map("created_at")
+
+  wallet Wallet @relation(fields: [walletId], references: [id])
+
+  @@map("ledger_entries")
+}
