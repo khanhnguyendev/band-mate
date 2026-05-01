@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-011",
+  "project": "band-mate",
+  "title": "Plans, Pricing and Wallet",
+  "brief": "Subscription plans (Free/Starter/Pro) with credit allocation. Stripe checkout integration. Wallet balance with reserve/consume/refund ledger. Bonus credit campaigns.",
+  "affected_modules": ["plans", "wallet", "payments", "ledger"],
+  "owner": "po"
+}

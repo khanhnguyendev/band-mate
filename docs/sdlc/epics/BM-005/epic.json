@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-005",
+  "project": "band-mate",
+  "title": "Reading Practice",
+  "brief": "Timed reading passages with MCQ, True/False/Not Given, and matching tasks. Auto-graded with explanations. Progress tracked per passage and skill area.",
+  "affected_modules": ["reading", "exercises", "progress"],
+  "owner": "po"
+}

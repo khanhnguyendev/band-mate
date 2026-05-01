@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-007",
+  "project": "band-mate",
+  "title": "Reports and Improvement Plans",
+  "brief": "After each scored submission, generate a structured PDF/web report with band breakdown, error analysis, and a personalised 2-week improvement plan linked to practice exercises.",
+  "affected_modules": ["reports", "scoring", "exercises"],
+  "owner": "po"
+}

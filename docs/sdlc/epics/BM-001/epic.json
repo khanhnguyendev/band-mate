@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-001",
+  "project": "band-mate",
+  "title": "Auth and Accounts",
+  "brief": "Users register with email/password via Supabase Auth, verify email, log in, and access a profile with wallet summary. Global JWT guard protects all NestJS routes.",
+  "affected_modules": ["auth", "users", "wallet"],
+  "owner": "po"
+}

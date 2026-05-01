@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-009",
+  "project": "band-mate",
+  "title": "Gamification System",
+  "brief": "XP, daily/weekly streaks, achievement badges, and a quest system that awards bonus credits. Leaderboard (opt-in). Mascot reactions on milestone events.",
+  "affected_modules": ["gamification", "quests", "wallet", "notifications"],
+  "owner": "po"
+}

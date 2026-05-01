@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-004",
+  "project": "band-mate",
+  "title": "Speaking Practice",
+  "brief": "Users record audio responses to Part 1/2/3 prompts. Audio is transcribed via Whisper then scored by the AI pipeline (Fluency/Coherence, Lexical Resource, Grammar, Pronunciation).",
+  "affected_modules": ["speaking", "submissions", "scoring", "storage", "wallet"],
+  "owner": "po"
+}

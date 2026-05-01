@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-003",
+  "project": "band-mate",
+  "title": "Writing Practice",
+  "brief": "Users submit Task 1 and Task 2 writing responses. The AI scoring pipeline evaluates against official IELTS bands (TR/CC/LR/GRA) and returns detailed feedback within 60 s.",
+  "affected_modules": ["writing", "submissions", "scoring", "wallet"],
+  "owner": "po"
+}

@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-012",
+  "project": "band-mate",
+  "title": "Notifications",
+  "brief": "In-app and email notifications for: scoring complete, streak reminder, quest unlocked, low credit warning, and subscription renewal. User preference controls per channel.",
+  "affected_modules": ["notifications", "email", "scoring", "gamification"],
+  "owner": "po"
+}

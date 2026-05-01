@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-008",
+  "project": "band-mate",
+  "title": "Dashboard and Progress",
+  "brief": "A central dashboard shows band score trend charts, streak calendar, skill radar (R/L/W/S), recent submissions, and quest progress. Data aggregated per user.",
+  "affected_modules": ["dashboard", "progress", "gamification"],
+  "owner": "po"
+}

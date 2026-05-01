@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-010",
+  "project": "band-mate",
+  "title": "Mascot and UI Delight",
+  "brief": "Animated mascot character reacts to user actions (submit, streak, level-up). Lottie animations, confetti on achievements, dark mode toggle, smooth page transitions.",
+  "affected_modules": ["ui", "mascot", "gamification"],
+  "owner": "po"
+}

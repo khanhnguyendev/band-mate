@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-006",
+  "project": "band-mate",
+  "title": "Listening Practice",
+  "brief": "Audio-driven exercises for Sections 1-4. Users answer questions while listening; auto-graded with transcript review. Supports form completion, MCQ, and map labelling.",
+  "affected_modules": ["listening", "exercises", "storage", "progress"],
+  "owner": "po"
+}

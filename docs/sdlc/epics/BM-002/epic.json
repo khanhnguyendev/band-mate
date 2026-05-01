@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-002",
+  "project": "band-mate",
+  "title": "Onboarding",
+  "brief": "New users complete a guided onboarding flow: select English level, set weekly study goal, choose target band score, and receive a personalised study plan recommendation.",
+  "affected_modules": ["onboarding", "users", "plans"],
+  "owner": "po"
+}

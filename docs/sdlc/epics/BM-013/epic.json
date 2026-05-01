@@ -1,0 +1,8 @@
+{
+  "epic_id": "BM-013",
+  "project": "band-mate",
+  "title": "Admin Console",
+  "brief": "Internal dashboard for ops: user management, credit adjustments, scoring queue monitor, prompt pack versioning, content moderation flags, and revenue metrics.",
+  "affected_modules": ["admin", "users", "scoring", "wallet", "content"],
+  "owner": "po"
+}
