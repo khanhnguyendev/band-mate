@@ -15,4 +15,13 @@ export class QuestionsController {
       difficulty: difficulty as Difficulty | undefined,
     })
   }
+
+  @Public()
+  @Get('speaking')
+  async speaking(@Query('part') part?: string, @Query('difficulty') difficulty?: string) {
+    return this.questions.findSpeaking({
+      part: part as TaskType | undefined,
+      difficulty: difficulty as Difficulty | undefined,
+    })
+  }
 }

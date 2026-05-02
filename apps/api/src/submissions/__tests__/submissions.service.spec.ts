@@ -5,9 +5,11 @@ const mockReservation = { id: 'reserve-id', amount: -2 }
 const mockSubmission = { id: 'sub-id', status: 'queued', creditCost: 2 }
 
 const mockPrisma = { submission: { create: jest.fn() } }
+const mockSupabase = { client: { storage: { from: jest.fn() } } }
 const mockWallet = { reserve: jest.fn().mockResolvedValue(mockReservation) }
 const mockQuestions = { findQuestionById: jest.fn().mockResolvedValue(mockQuestion) }
 const mockQueue = { add: jest.fn() }
+const mockTranscribeQueue = { add: jest.fn() }
 
 describe('SubmissionsService.submitWriting()', () => {
   let service: SubmissionsService
@@ -19,9 +21,11 @@ describe('SubmissionsService.submitWriting()', () => {
     mockPrisma.submission.create.mockResolvedValue(mockSubmission)
     service = new SubmissionsService(
       mockPrisma as any,
+      mockSupabase as any,
       mockWallet as any,
       mockQuestions as any,
       mockQueue as any,
+      mockTranscribeQueue as any,
     )
   })
 

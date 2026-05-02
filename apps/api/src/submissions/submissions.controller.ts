@@ -10,6 +10,15 @@ const SubmitWritingSchema = z.object({
   text: z.string().min(50, 'Response must be at least 50 characters'),
 })
 
+const SpeakingUploadUrlSchema = z.object({
+  questionId: z.string().uuid(),
+})
+
+const SubmitSpeakingSchema = z.object({
+  questionId: z.string().uuid(),
+  audioKey: z.string().min(1),
+})
+
 @Controller('submissions')
 export class SubmissionsController {
   constructor(
@@ -22,6 +31,20 @@ export class SubmissionsController {
     const { questionId, text } = SubmitWritingSchema.parse(body)
     const appUser = await this.users.findOrCreate(supabaseUser)
     return this.submissions.submitWriting(appUser.id, questionId, text)
+  }
+
+  @Post('speaking/upload-url')
+  async getSpeakingUploadUrl(@CurrentUser() supabaseUser: SupabaseUser, @Body() body: unknown) {
+    const { questionId } = SpeakingUploadUrlSchema.parse(body)
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.submissions.getSpeakingUploadUrl(appUser.id, questionId)
+  }
+
+  @Post('speaking')
+  async submitSpeaking(@CurrentUser() supabaseUser: SupabaseUser, @Body() body: unknown) {
+    const { questionId, audioKey } = SubmitSpeakingSchema.parse(body)
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.submissions.submitSpeaking(appUser.id, questionId, audioKey)
   }
 
   @Get(':id/status')
