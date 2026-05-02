@@ -8,6 +8,8 @@ datasource db {
   directUrl = env("DATABASE_URL")
 }
 
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
 enum UserRole {
   learner
   admin
@@ -20,8 +22,54 @@ enum Skill {
   listening
 }
 
+enum LedgerEntryType {
+  reserve
+  consume
+  refund
+  grant
+  topup
+  expire
+}
+
+enum TaskType {
+  task1
+  task2
+  part1
+  part2
+  part3
+}
+
+enum Difficulty {
+  band5
+  band6
+  band7
+  band8
+}
+
+enum SubmissionStatus {
+  queued
+  transcribing
+  scoring
+  completed
+  failed
+}
+
+enum ScoringJobType {
+  transcription
+  scoring
+}
+
+enum ScoringJobStatus {
+  pending
+  running
+  completed
+  failed
+  dead
+}
+
+// ─── Core user & wallet models ─────────────────────────────────────────────────
+
 // Users are created in Supabase Auth; this table stores app-level profile data.
-// supabase_user_id is the UUID from Supabase Auth — it is the primary identifier.
 model User {
   id                    String    @id @default(uuid())
   supabaseUserId        String    @unique @map("supabase_user_id")
@@ -36,8 +84,11 @@ model User {
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
 
-  wallet       Wallet?
-  subscription Subscription?
+  wallet          Wallet?
+  subscription    Subscription?
+  submissions     Submission[]
+  scoreReports    ScoreReport[]
+  improvementTasks ImprovementTask[]
 
   @@map("users")
 }
@@ -88,15 +139,6 @@ model Wallet {
   @@map("wallets")
 }
 
-enum LedgerEntryType {
-  reserve
-  consume
-  refund
-  grant
-  topup
-  expire
-}
-
 model LedgerEntry {
   id             String          @id @default(uuid())
   walletId       String          @map("wallet_id")
@@ -111,4 +153,141 @@ model LedgerEntry {
   wallet Wallet @relation(fields: [walletId], references: [id])
 
   @@map("ledger_entries")
+}
+
+// ─── Content models ────────────────────────────────────────────────────────────
+
+model QuestionSet {
+  id               String     @id @default(uuid())
+  skill            Skill
+  title            String
+  taskType         TaskType   @map("task_type")
+  difficulty       Difficulty
+  estimatedMinutes Int        @map("estimated_minutes")
+  isPublished      Boolean    @default(true) @map("is_published")
+  createdAt        DateTime   @default(now()) @map("created_at")
+
+  questions Question[]
+
+  @@map("question_sets")
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  setId     String   @map("set_id")
+  prompt    String
+  mediaUrl  String?  @map("media_url")
+  answerKey Json?    @map("answer_key")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  set         QuestionSet  @relation(fields: [setId], references: [id])
+  submissions Submission[]
+
+  @@map("questions")
+}
+
+// ─── Submission & scoring models ───────────────────────────────────────────────
+
+model Submission {
+  id            String           @id @default(uuid())
+  userId        String           @map("user_id")
+  questionId    String           @map("question_id")
+  skill         Skill
+  status        SubmissionStatus @default(queued)
+  inputText     String?          @map("input_text")
+  audioKey      String?          @map("audio_key")
+  transcript    String?
+  creditCost    Int              @map("credit_cost")
+  reservationId String?          @map("reservation_id")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id])
+  question    Question     @relation(fields: [questionId], references: [id])
+  scoringJobs ScoringJob[]
+  report      ScoreReport?
+
+  @@map("submissions")
+}
+
+model ScoringJob {
+  id           String           @id @default(uuid())
+  submissionId String           @map("submission_id")
+  type         ScoringJobType
+  status       ScoringJobStatus @default(pending)
+  attempts     Int              @default(0)
+  lastError    String?          @map("last_error")
+  promptPackId String?          @map("prompt_pack_id")
+  aiTokensUsed Int?             @map("ai_tokens_used")
+  aiCostUsd    Decimal?         @map("ai_cost_usd") @db.Decimal(10, 6)
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  submission Submission @relation(fields: [submissionId], references: [id])
+
+  @@map("scoring_jobs")
+}
+
+model ScoreReport {
+  id              String   @id @default(uuid())
+  submissionId    String   @unique @map("submission_id")
+  userId          String   @map("user_id")
+  skill           Skill
+  overallBand     Decimal  @map("overall_band") @db.Decimal(2, 1)
+  rubricVersionId String?  @map("rubric_version_id")
+  rawAiResponse   Json?    @map("raw_ai_response")
+  isEstimate      Boolean  @default(true) @map("is_estimate")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  submission       Submission        @relation(fields: [submissionId], references: [id])
+  user             User              @relation(fields: [userId], references: [id])
+  criterionRows    CriterionRow[]
+  improvementTasks ImprovementTask[]
+
+  @@map("score_reports")
+}
+
+model CriterionRow {
+  id            String  @id @default(uuid())
+  reportId      String  @map("report_id")
+  criterionName String  @map("criterion_name")
+  band          Decimal @db.Decimal(2, 1)
+  explanation   String
+  strengths     String[]
+  weaknesses    String[]
+
+  report ScoreReport @relation(fields: [reportId], references: [id])
+
+  @@map("criterion_rows")
+}
+
+model ImprovementTask {
+  id          String    @id @default(uuid())
+  reportId    String    @map("report_id")
+  userId      String    @map("user_id")
+  description String
+  skill       Skill
+  criterion   String?
+  status      String    @default("pending")
+  completedAt DateTime? @map("completed_at")
+
+  report ScoreReport @relation(fields: [reportId], references: [id])
+  user   User        @relation(fields: [userId], references: [id])
+
+  @@map("improvement_tasks")
+}
+
+model PromptPack {
+  id                 String   @id @default(uuid())
+  skill              Skill
+  version            String
+  systemPrompt       String   @map("system_prompt")
+  userPromptTemplate String   @map("user_prompt_template")
+  rubricSchema       Json     @map("rubric_schema")
+  isActive           Boolean  @default(false) @map("is_active")
+  createdBy          String?  @map("created_by")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@map("prompt_packs")
 }

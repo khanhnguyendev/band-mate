@@ -15,7 +15,9 @@
     "db:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.92.0",
     "@band-mate/shared": "workspace:*",
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^10.4.4",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.4.4",
@@ -23,6 +25,7 @@
     "@nestjs/throttler": "^6.2.1",
     "@prisma/client": "^5.20.0",
     "@supabase/supabase-js": "^2.45.4",
+    "bullmq": "^5.76.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "zod": "^3.23.8"
