@@ -306,6 +306,43 @@ Score this spoken response now.`,
     },
   })
   console.log('✓ Speaking prompt pack seeded')
+
+  // ─── Reading Question Set ──────────────────────────────────────────────────
+  const readingSet1 = await prisma.questionSet.upsert({
+    where: { id: 'qs-reading-academic-001' },
+    update: {},
+    create: {
+      id: 'qs-reading-academic-001',
+      skill: 'reading',
+      title: 'Climate Change and Global Policy',
+      taskType: 'task1',
+      difficulty: 'band6',
+      estimatedMinutes: 20,
+    },
+  })
+
+  const readingPassage = `Climate change has emerged as one of the most pressing challenges of the twenty-first century. Scientific consensus, represented by bodies such as the Intergovernmental Panel on Climate Change (IPCC), confirms that global average temperatures have risen by approximately 1.1 degrees Celsius above pre-industrial levels. This warming trend is primarily attributed to increased concentrations of greenhouse gases resulting from human activities, particularly the burning of fossil fuels and deforestation.
+
+International efforts to address climate change culminated in the Paris Agreement of 2015, which committed signatory nations to limiting global warming to well below 2 degrees Celsius, with an aspirational target of 1.5 degrees Celsius. However, critics argue that the voluntary nature of national commitments under this framework makes enforcement practically impossible. Several major economies have revised their targets upward since the agreement was signed, while others have temporarily withdrawn from the accord entirely.
+
+Renewable energy adoption has accelerated markedly over the past decade. Solar panel installation costs have fallen by over 80 percent since 2010, making solar power cost-competitive with fossil fuels in many regions. Wind energy capacity has similarly expanded, with offshore installations becoming increasingly common in European waters. Despite this progress, fossil fuels still account for more than 80 percent of global primary energy consumption, suggesting that the energy transition remains incomplete.`
+
+  const readingQuestions = [
+    { id: 'q-reading-001', prompt: 'The IPCC represents scientific consensus on the topic of climate change.', answerKey: { answer: 'True' }, order: 1 },
+    { id: 'q-reading-002', prompt: 'Global temperatures have risen by exactly 1.5 degrees Celsius above pre-industrial levels.', answerKey: { answer: 'False' }, order: 2 },
+    { id: 'q-reading-003', prompt: 'The Paris Agreement requires member nations to submit to binding international enforcement mechanisms.', answerKey: { answer: 'False' }, order: 3 },
+    { id: 'q-reading-004', prompt: 'The cost of installing solar panels has decreased significantly since 2010.', answerKey: { answer: 'True' }, order: 4 },
+    { id: 'q-reading-005', prompt: 'Offshore wind installations are more cost-effective than onshore installations.', answerKey: { answer: 'Not Given' }, order: 5 },
+  ]
+
+  for (const q of readingQuestions) {
+    await prisma.question.upsert({
+      where: { id: q.id },
+      update: {},
+      create: { id: q.id, setId: readingSet1.id, prompt: q.prompt, answerKey: q.answerKey, order: q.order, mediaUrl: readingPassage },
+    })
+  }
+  console.log('✓ Reading questions seeded')
 }
 
 main()

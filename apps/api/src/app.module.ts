@@ -12,6 +12,7 @@ import { SubmissionsModule } from './submissions/submissions.module'
 import { SupabaseModule } from './supabase/supabase.module'
 import { UsersModule } from './users/users.module'
 import { WalletModule } from './wallet/wallet.module'
+import { ReadingModule } from './reading/reading.module'
 import { TranscriptionModule } from './transcription/transcription.module'
 import { WorkersModule } from './workers/workers.module'
 
@@ -30,6 +31,7 @@ import { WorkersModule } from './workers/workers.module'
     QuestionsModule,
     SubmissionsModule,
     ReportsModule,
+    ReadingModule,
     TranscriptionModule,
     WorkersModule,
   ],
