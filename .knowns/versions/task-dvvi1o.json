@@ -1,6 +1,6 @@
 {
   "taskId": "dvvi1o",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,20 +22,20 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User sees daily quests and weekly challenge with progress",
-            "completed": false
+            "completed": false,
+            "text": "User sees daily quests and weekly challenge with progress"
           },
           {
-            "text": "Daily and weekly credit earning caps are enforced",
-            "completed": false
+            "completed": false,
+            "text": "Daily and weekly credit earning caps are enforced"
           },
           {
-            "text": "Only validated completions trigger rewards",
-            "completed": false
+            "completed": false,
+            "text": "Only validated completions trigger rewards"
           },
           {
-            "text": "Admin can change reward values without redeploying",
-            "completed": false
+            "completed": false,
+            "text": "Admin can change reward values without redeploying"
           }
         ],
         "description": "XP for broad learning activity. Credits earnable from low-cost validated actions (Reading, Listening, report review, drills). Daily quests, weekly challenges, streaks, badges, milestones. Daily and weekly earn caps. Anti-abuse rules.",
@@ -45,6 +45,184 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 9: Gamification system"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "dvvi1o",
+      "version": 2,
+      "timestamp": "2026-05-04T12:37:58.012404Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User sees daily quests and weekly challenge with progress"
+          },
+          {
+            "completed": false,
+            "text": "Daily and weekly credit earning caps are enforced"
+          },
+          {
+            "completed": false,
+            "text": "Only validated completions trigger rewards"
+          },
+          {
+            "completed": false,
+            "text": "Admin can change reward values without redeploying"
+          }
+        ],
+        "assignee": "@me",
+        "description": "XP for broad learning activity. Credits earnable from low-cost validated actions (Reading, Listening, report review, drills). Daily quests, weekly challenges, streaks, badges, milestones. Daily and weekly earn caps. Anti-abuse rules.",
+        "labels": [
+          "gamification",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 9: Gamification system"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "dvvi1o",
+      "version": 3,
+      "timestamp": "2026-05-04T12:39:34.791684Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Prisma schema — add QuestDefinition (id, title, description, skill?, action, requiredCount, rewardCredits, period: daily/weekly, isActive) and GameConfig (key, value key-value store); seed 3 daily quests + 1 weekly challenge + earn cap config values (daily_earn_cap=5, weekly_earn_cap=20, reading_reward=1, listening_reward=1)\n2. GamificationService — award(userId, credits, description, idempotencyKey): reads daily/weekly caps from GameConfig, counts bonus LedgerEntry rows in current period, only calls wallet.grant() if under cap; getQuestsForUser(userId): for each active QuestDefinition, counts matching submissions/reports in the period, returns { quest, progress, required, claimed, reward }\n3. GamificationController + GamificationModule — GET /v1/quests returns daily quests + weekly challenge with per-user progress; module exports GamificationService; import into AppModule\n4. Update Reading + Listening — swap wallet.grant() → gamification.award() in both services; swap WalletModule → GamificationModule in both module imports; update both test files to mock gamification.award instead of wallet.grant\n5. Web — fetch GET /v1/quests in dashboard page; add QuestPanel client component showing quest cards with progress bars and reward badges; pass quests as prop to panel alongside existing stats\n6. Tests — GamificationService unit spec: award() respects daily/weekly cap, award() calls wallet.grant() when under cap, getQuestsForUser() computes progress, getQuestsForUser() marks quest claimed when LedgerEntry idempotency key exists"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User sees daily quests and weekly challenge with progress"
+          },
+          {
+            "completed": false,
+            "text": "Daily and weekly credit earning caps are enforced"
+          },
+          {
+            "completed": false,
+            "text": "Only validated completions trigger rewards"
+          },
+          {
+            "completed": false,
+            "text": "Admin can change reward values without redeploying"
+          }
+        ],
+        "assignee": "@me",
+        "description": "XP for broad learning activity. Credits earnable from low-cost validated actions (Reading, Listening, report review, drills). Daily quests, weekly challenges, streaks, badges, milestones. Daily and weekly earn caps. Anti-abuse rules.",
+        "implementationPlan": "1. Prisma schema — add QuestDefinition (id, title, description, skill?, action, requiredCount, rewardCredits, period: daily/weekly, isActive) and GameConfig (key, value key-value store); seed 3 daily quests + 1 weekly challenge + earn cap config values (daily_earn_cap=5, weekly_earn_cap=20, reading_reward=1, listening_reward=1)\n2. GamificationService — award(userId, credits, description, idempotencyKey): reads daily/weekly caps from GameConfig, counts bonus LedgerEntry rows in current period, only calls wallet.grant() if under cap; getQuestsForUser(userId): for each active QuestDefinition, counts matching submissions/reports in the period, returns { quest, progress, required, claimed, reward }\n3. GamificationController + GamificationModule — GET /v1/quests returns daily quests + weekly challenge with per-user progress; module exports GamificationService; import into AppModule\n4. Update Reading + Listening — swap wallet.grant() → gamification.award() in both services; swap WalletModule → GamificationModule in both module imports; update both test files to mock gamification.award instead of wallet.grant\n5. Web — fetch GET /v1/quests in dashboard page; add QuestPanel client component showing quest cards with progress bars and reward badges; pass quests as prop to panel alongside existing stats\n6. Tests — GamificationService unit spec: award() respects daily/weekly cap, award() calls wallet.grant() when under cap, getQuestsForUser() computes progress, getQuestsForUser() marks quest claimed when LedgerEntry idempotency key exists",
+        "labels": [
+          "gamification",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 9: Gamification system"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "dvvi1o",
+      "version": 4,
+      "timestamp": "2026-05-04T12:45:04.158068Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Delivered: QuestDefinition + GameConfig schema models, seed (3 daily + 1 weekly quest + caps), GamificationService (award() with daily/weekly cap, getQuestsForUser()), GamificationController GET /v1/quests, Reading + Listening swapped to gamification.award(), QuestPanel web component, dashboard fetches /v1/quests. 8 new gamification tests; 68/68 full suite green."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "User sees daily quests and weekly challenge with progress"
+          },
+          {
+            "completed": true,
+            "text": "Daily and weekly credit earning caps are enforced"
+          },
+          {
+            "completed": true,
+            "text": "Only validated completions trigger rewards"
+          },
+          {
+            "completed": true,
+            "text": "Admin can change reward values without redeploying"
+          }
+        ],
+        "assignee": "@me",
+        "description": "XP for broad learning activity. Credits earnable from low-cost validated actions (Reading, Listening, report review, drills). Daily quests, weekly challenges, streaks, badges, milestones. Daily and weekly earn caps. Anti-abuse rules.",
+        "implementationNotes": "Delivered: QuestDefinition + GameConfig schema models, seed (3 daily + 1 weekly quest + caps), GamificationService (award() with daily/weekly cap, getQuestsForUser()), GamificationController GET /v1/quests, Reading + Listening swapped to gamification.award(), QuestPanel web component, dashboard fetches /v1/quests. 8 new gamification tests; 68/68 full suite green.",
+        "implementationPlan": "1. Prisma schema — add QuestDefinition (id, title, description, skill?, action, requiredCount, rewardCredits, period: daily/weekly, isActive) and GameConfig (key, value key-value store); seed 3 daily quests + 1 weekly challenge + earn cap config values (daily_earn_cap=5, weekly_earn_cap=20, reading_reward=1, listening_reward=1)\n2. GamificationService — award(userId, credits, description, idempotencyKey): reads daily/weekly caps from GameConfig, counts bonus LedgerEntry rows in current period, only calls wallet.grant() if under cap; getQuestsForUser(userId): for each active QuestDefinition, counts matching submissions/reports in the period, returns { quest, progress, required, claimed, reward }\n3. GamificationController + GamificationModule — GET /v1/quests returns daily quests + weekly challenge with per-user progress; module exports GamificationService; import into AppModule\n4. Update Reading + Listening — swap wallet.grant() → gamification.award() in both services; swap WalletModule → GamificationModule in both module imports; update both test files to mock gamification.award instead of wallet.grant\n5. Web — fetch GET /v1/quests in dashboard page; add QuestPanel client component showing quest cards with progress bars and reward badges; pass quests as prop to panel alongside existing stats\n6. Tests — GamificationService unit spec: award() respects daily/weekly cap, award() calls wallet.grant() when under cap, getQuestsForUser() computes progress, getQuestsForUser() marks quest claimed when LedgerEntry idempotency key exists",
+        "labels": [
+          "gamification",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 9: Gamification system"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "dvvi1o",
+      "version": 5,
+      "timestamp": "2026-05-04T12:45:14.337617Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User sees daily quests and weekly challenge with progress",
+            "completed": true
+          },
+          {
+            "text": "Daily and weekly credit earning caps are enforced",
+            "completed": true
+          },
+          {
+            "text": "Only validated completions trigger rewards",
+            "completed": true
+          },
+          {
+            "text": "Admin can change reward values without redeploying",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "XP for broad learning activity. Credits earnable from low-cost validated actions (Reading, Listening, report review, drills). Daily quests, weekly challenges, streaks, badges, milestones. Daily and weekly earn caps. Anti-abuse rules.",
+        "implementationNotes": "Delivered: QuestDefinition + GameConfig schema models, seed (3 daily + 1 weekly quest + caps), GamificationService (award() with daily/weekly cap, getQuestsForUser()), GamificationController GET /v1/quests, Reading + Listening swapped to gamification.award(), QuestPanel web component, dashboard fetches /v1/quests. 8 new gamification tests; 68/68 full suite green.",
+        "implementationPlan": "1. Prisma schema — add QuestDefinition (id, title, description, skill?, action, requiredCount, rewardCredits, period: daily/weekly, isActive) and GameConfig (key, value key-value store); seed 3 daily quests + 1 weekly challenge + earn cap config values (daily_earn_cap=5, weekly_earn_cap=20, reading_reward=1, listening_reward=1)\n2. GamificationService — award(userId, credits, description, idempotencyKey): reads daily/weekly caps from GameConfig, counts bonus LedgerEntry rows in current period, only calls wallet.grant() if under cap; getQuestsForUser(userId): for each active QuestDefinition, counts matching submissions/reports in the period, returns { quest, progress, required, claimed, reward }\n3. GamificationController + GamificationModule — GET /v1/quests returns daily quests + weekly challenge with per-user progress; module exports GamificationService; import into AppModule\n4. Update Reading + Listening — swap wallet.grant() → gamification.award() in both services; swap WalletModule → GamificationModule in both module imports; update both test files to mock gamification.award instead of wallet.grant\n5. Web — fetch GET /v1/quests in dashboard page; add QuestPanel client component showing quest cards with progress bars and reward badges; pass quests as prop to panel alongside existing stats\n6. Tests — GamificationService unit spec: award() respects daily/weekly cap, award() calls wallet.grant() when under cap, getQuestsForUser() computes progress, getQuestsForUser() marks quest claimed when LedgerEntry idempotency key exists",
+        "labels": [
+          "gamification",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 9: Gamification system"
       }
     }

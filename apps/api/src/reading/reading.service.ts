@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import { GamificationService } from '../gamification/gamification.service'
 import { PrismaService } from '../prisma/prisma.service'
-import { WalletService } from '../wallet/wallet.service'
 import { QuestionsService } from '../questions/questions.service'
 
 interface AnswerKey {
@@ -18,7 +18,7 @@ interface BreakdownItem {
 export class ReadingService {
   constructor(
     private prisma: PrismaService,
-    private wallet: WalletService,
+    private gamification: GamificationService,
     private questions: QuestionsService,
   ) {}
 
@@ -69,8 +69,8 @@ export class ReadingService {
       },
     })
 
-    // Grant 1 bonus credit on first completion of this set (idempotent)
-    await this.wallet.grant(userId, 1, `Reading bonus — set ${setId}`, `reading-bonus:${userId}:${setId}`)
+    // Award bonus credit via gamification (cap-enforced, idempotent)
+    await this.gamification.award(userId, 1, `Reading bonus — set ${setId}`, `reading-bonus:${userId}:${setId}`)
 
     return { score, total, percentage, breakdown }
   }

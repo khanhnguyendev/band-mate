@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
+import { QuestPanel } from '@/components/gamification/quest-panel'
 
 const SKILL_LABEL: Record<string, string> = {
   writing: 'Writing', speaking: 'Speaking', reading: 'Reading', listening: 'Listening',
@@ -39,12 +40,16 @@ export default async function DashboardPage({ searchParams }: Props) {
   const token = session?.access_token
   const apiUrl = process.env.API_URL ?? ''
 
-  const [meRes, statsRes] = await Promise.all([
+  const [meRes, statsRes, questsRes] = await Promise.all([
     fetch(`${apiUrl}/v1/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: 'no-store',
     }),
     fetch(`${apiUrl}/v1/users/me/stats`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    }),
+    fetch(`${apiUrl}/v1/quests`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: 'no-store',
     }),
@@ -58,6 +63,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     creditBalance: 0, bonusBalance: 0, streak: 0,
     submissionCounts: {}, recentReports: [], weakestSkill: null, nextAction: null,
   }
+  const quests = questsRes.ok ? await questsRes.json() : []
 
   const params = await searchParams
   const isWelcome = params.welcome === '1'
@@ -129,6 +135,9 @@ export default async function DashboardPage({ searchParams }: Props) {
           </Link>
         ))}
       </div>
+
+      {/* Daily quests + weekly challenge */}
+      <QuestPanel quests={quests} />
 
       {/* Recent reports */}
       {stats.recentReports.length > 0 && (

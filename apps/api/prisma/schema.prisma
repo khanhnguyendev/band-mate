@@ -291,3 +291,28 @@ model PromptPack {
 
   @@map("prompt_packs")
 }
+
+// ─── Gamification models ───────────────────────────────────────────────────────
+
+model QuestDefinition {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  skill         Skill?
+  action        String   // e.g. 'reading_complete', 'listening_complete', 'speaking_submit', 'writing_submit'
+  requiredCount Int      @default(1) @map("required_count")
+  rewardCredits Int      @default(1) @map("reward_credits")
+  period        String   // 'daily' | 'weekly'
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("quest_definitions")
+}
+
+model GameConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("game_config")
+}

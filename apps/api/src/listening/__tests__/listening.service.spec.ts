@@ -15,7 +15,7 @@ const mockPrisma = {
   submission: { create: jest.fn().mockResolvedValue({ id: 'sub-id' }) },
 }
 
-const mockWallet = { grant: jest.fn().mockResolvedValue({}) }
+const mockGamification = { award: jest.fn().mockResolvedValue({}) }
 const mockQuestions = { findListening: jest.fn().mockResolvedValue([mockSet]) }
 
 describe('ListeningService', () => {
@@ -27,9 +27,9 @@ describe('ListeningService', () => {
     process.env.FEATURE_LISTENING = 'true'
     mockPrisma.questionSet.findUnique.mockResolvedValue(mockSet)
     mockPrisma.submission.create.mockResolvedValue({ id: 'sub-id' })
-    mockWallet.grant.mockResolvedValue({})
+    mockGamification.award.mockResolvedValue({})
     mockQuestions.findListening.mockResolvedValue([mockSet])
-    service = new ListeningService(mockPrisma as any, mockWallet as any, mockQuestions as any)
+    service = new ListeningService(mockPrisma as any, mockGamification as any, mockQuestions as any)
   })
 
   afterEach(() => {
@@ -65,7 +65,7 @@ describe('ListeningService', () => {
       'q-1': '$950', 'q-2': 'two', 'q-3': 'third',
     })
 
-    expect(mockWallet.grant).toHaveBeenCalledWith(
+    expect(mockGamification.award).toHaveBeenCalledWith(
       'user-id', 1, expect.any(String), 'listening-bonus:user-id:qs-listening-001',
     )
   })
@@ -74,8 +74,8 @@ describe('ListeningService', () => {
     await service.submitListening('user-id', 'qs-listening-001', { 'q-1': '$950', 'q-2': 'two', 'q-3': 'third' })
     await service.submitListening('user-id', 'qs-listening-001', { 'q-1': '$950', 'q-2': 'two', 'q-3': 'third' })
 
-    expect(mockWallet.grant).toHaveBeenCalledTimes(2)
-    expect(mockWallet.grant).toHaveBeenCalledWith('user-id', 1, expect.any(String), 'listening-bonus:user-id:qs-listening-001')
+    expect(mockGamification.award).toHaveBeenCalledTimes(2)
+    expect(mockGamification.award).toHaveBeenCalledWith('user-id', 1, expect.any(String), 'listening-bonus:user-id:qs-listening-001')
   })
 
   it('throws NotFoundException for unknown set', async () => {

@@ -385,6 +385,42 @@ Renewable energy adoption has accelerated markedly over the past decade. Solar p
     })
   }
   console.log('✓ Listening questions seeded')
+
+  await seedGamification()
+}
+
+async function seedGamification() {
+  // Game config — earn caps and reward amounts (editable by admin in DB)
+  const configs = [
+    { key: 'daily_earn_cap', value: '5' },
+    { key: 'weekly_earn_cap', value: '20' },
+    { key: 'reading_reward', value: '1' },
+    { key: 'listening_reward', value: '1' },
+  ]
+  for (const config of configs) {
+    await prisma.gameConfig.upsert({
+      where: { key: config.key },
+      update: {},
+      create: config,
+    })
+  }
+  console.log('✓ Game config seeded')
+
+  // Quest definitions
+  const quests = [
+    { id: 'quest-daily-reading', title: 'Reader', description: 'Complete 1 reading set today', action: 'reading_complete', requiredCount: 1, rewardCredits: 1, period: 'daily' },
+    { id: 'quest-daily-listening', title: 'Listener', description: 'Complete 1 listening set today', action: 'listening_complete', requiredCount: 1, rewardCredits: 1, period: 'daily' },
+    { id: 'quest-daily-speaking', title: 'Speaker', description: 'Submit 1 speaking response today', action: 'speaking_submit', requiredCount: 1, rewardCredits: 1, period: 'daily' },
+    { id: 'quest-weekly-allskills', title: 'All-Rounder', description: 'Practice all 4 skills this week', action: 'all_skills', requiredCount: 4, rewardCredits: 3, period: 'weekly' },
+  ]
+  for (const quest of quests) {
+    await prisma.questDefinition.upsert({
+      where: { id: quest.id },
+      update: {},
+      create: quest,
+    })
+  }
+  console.log('✓ Quest definitions seeded')
 }
 
 main()

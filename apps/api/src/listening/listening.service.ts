@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import { GamificationService } from '../gamification/gamification.service'
 import { PrismaService } from '../prisma/prisma.service'
-import { WalletService } from '../wallet/wallet.service'
 import { QuestionsService } from '../questions/questions.service'
 
 interface AnswerKey {
@@ -18,7 +18,7 @@ interface BreakdownItem {
 export class ListeningService {
   constructor(
     private prisma: PrismaService,
-    private wallet: WalletService,
+    private gamification: GamificationService,
     private questions: QuestionsService,
   ) {}
 
@@ -70,7 +70,7 @@ export class ListeningService {
     })
 
     // Grant 1 bonus credit on completion — quest system integration in Module 9
-    await this.wallet.grant(userId, 1, `Listening bonus — set ${setId}`, `listening-bonus:${userId}:${setId}`)
+    await this.gamification.award(userId, 1, `Listening bonus — set ${setId}`, `listening-bonus:${userId}:${setId}`)
 
     return { score, total, percentage, breakdown }
   }

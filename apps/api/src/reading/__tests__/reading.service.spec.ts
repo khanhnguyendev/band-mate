@@ -15,7 +15,7 @@ const mockPrisma = {
   submission: { create: jest.fn().mockResolvedValue({ id: 'sub-id' }) },
 }
 
-const mockWallet = { grant: jest.fn().mockResolvedValue({}) }
+const mockGamification = { award: jest.fn().mockResolvedValue({}) }
 const mockQuestions = { findReading: jest.fn().mockResolvedValue([mockSet]) }
 
 describe('ReadingService', () => {
@@ -27,9 +27,9 @@ describe('ReadingService', () => {
     process.env.FEATURE_READING = 'true'
     mockPrisma.questionSet.findUnique.mockResolvedValue(mockSet)
     mockPrisma.submission.create.mockResolvedValue({ id: 'sub-id' })
-    mockWallet.grant.mockResolvedValue({})
+    mockGamification.award.mockResolvedValue({})
     mockQuestions.findReading.mockResolvedValue([mockSet])
-    service = new ReadingService(mockPrisma as any, mockWallet as any, mockQuestions as any)
+    service = new ReadingService(mockPrisma as any, mockGamification as any, mockQuestions as any)
   })
 
   afterEach(() => {
@@ -65,7 +65,7 @@ describe('ReadingService', () => {
       'q-1': 'True', 'q-2': 'False', 'q-3': 'Not Given',
     })
 
-    expect(mockWallet.grant).toHaveBeenCalledWith(
+    expect(mockGamification.award).toHaveBeenCalledWith(
       'user-id', 1, expect.any(String), 'reading-bonus:user-id:qs-reading-001',
     )
   })
@@ -75,8 +75,8 @@ describe('ReadingService', () => {
     await service.submitReading('user-id', 'qs-reading-001', { 'q-1': 'True', 'q-2': 'False', 'q-3': 'Not Given' })
 
     // grant is called twice but idempotency key is the same — wallet.grant handles dedup
-    expect(mockWallet.grant).toHaveBeenCalledTimes(2)
-    expect(mockWallet.grant).toHaveBeenCalledWith('user-id', 1, expect.any(String), 'reading-bonus:user-id:qs-reading-001')
+    expect(mockGamification.award).toHaveBeenCalledTimes(2)
+    expect(mockGamification.award).toHaveBeenCalledWith('user-id', 1, expect.any(String), 'reading-bonus:user-id:qs-reading-001')
   })
 
   it('throws NotFoundException for unknown set', async () => {
