@@ -14,6 +14,12 @@ export class UsersController {
     return this.toResponse(user)
   }
 
+  @Get('me/stats')
+  async stats(@CurrentUser() supabaseUser: SupabaseUser) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.users.getStats(appUser.id)
+  }
+
   @Patch('onboarding')
   async onboarding(@CurrentUser() supabaseUser: SupabaseUser, @Body() body: unknown) {
     const dto = OnboardingSchema.parse(body)

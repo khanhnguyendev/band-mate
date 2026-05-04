@@ -1,6 +1,6 @@
 {
   "taskId": "x9k47s",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,16 +22,16 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "Dashboard loads key stats for the authenticated user",
-            "completed": false
+            "completed": false,
+            "text": "Dashboard loads key stats for the authenticated user"
           },
           {
-            "text": "Weakest skill and next recommended action are visible above the fold",
-            "completed": false
+            "completed": false,
+            "text": "Weakest skill and next recommended action are visible above the fold"
           },
           {
-            "text": "Streak, XP, and credit balance are accurate and real-time",
-            "completed": false
+            "completed": false,
+            "text": "Streak, XP, and credit balance are accurate and real-time"
           }
         ],
         "description": "Shows skill activity, latest reports, streak, XP, badges, quests, and credit balance. Learning trend and weak-area analysis. Weakest skill and next recommended action above the fold.",
@@ -41,6 +41,168 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 8: Dashboard and progress"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "x9k47s",
+      "version": 2,
+      "timestamp": "2026-05-04T12:32:33.147234Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "Dashboard loads key stats for the authenticated user"
+          },
+          {
+            "completed": false,
+            "text": "Weakest skill and next recommended action are visible above the fold"
+          },
+          {
+            "completed": false,
+            "text": "Streak, XP, and credit balance are accurate and real-time"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Shows skill activity, latest reports, streak, XP, badges, quests, and credit balance. Learning trend and weak-area analysis. Weakest skill and next recommended action above the fold.",
+        "labels": [
+          "dashboard",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 8: Dashboard and progress"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "x9k47s",
+      "version": 3,
+      "timestamp": "2026-05-04T12:33:26.040562Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. API — UsersService.getStats(userId): query scoreReports (last 10, grouped by skill → weakest avg band), submissions (count per skill + streak from consecutive days), wallet (balance + bonusBalance); return { submissionCounts, recentReports, weakestSkill, nextAction, streak, creditBalance, bonusBalance }; wire GET /v1/users/me/stats\n2. Web — dashboard page: fetch /v1/users/me (existing) + /v1/users/me/stats in parallel; render: (a) above-the-fold hero card with weakest skill + next recommended action; (b) stats strip: streak days, credit balance, total submissions; (c) recent reports cards (last 3, skill badge + band + date + link); (d) skill activity row (submission count per skill with quick-start links)\n3. Tests — UsersService stats unit spec: streak computation (consecutive days), weakest skill derivation (lowest avg band), empty state (new user with no submissions)"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "Dashboard loads key stats for the authenticated user"
+          },
+          {
+            "completed": false,
+            "text": "Weakest skill and next recommended action are visible above the fold"
+          },
+          {
+            "completed": false,
+            "text": "Streak, XP, and credit balance are accurate and real-time"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Shows skill activity, latest reports, streak, XP, badges, quests, and credit balance. Learning trend and weak-area analysis. Weakest skill and next recommended action above the fold.",
+        "implementationPlan": "1. API — UsersService.getStats(userId): query scoreReports (last 10, grouped by skill → weakest avg band), submissions (count per skill + streak from consecutive days), wallet (balance + bonusBalance); return { submissionCounts, recentReports, weakestSkill, nextAction, streak, creditBalance, bonusBalance }; wire GET /v1/users/me/stats\n2. Web — dashboard page: fetch /v1/users/me (existing) + /v1/users/me/stats in parallel; render: (a) above-the-fold hero card with weakest skill + next recommended action; (b) stats strip: streak days, credit balance, total submissions; (c) recent reports cards (last 3, skill badge + band + date + link); (d) skill activity row (submission count per skill with quick-start links)\n3. Tests — UsersService stats unit spec: streak computation (consecutive days), weakest skill derivation (lowest avg band), empty state (new user with no submissions)",
+        "labels": [
+          "dashboard",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 8: Dashboard and progress"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "x9k47s",
+      "version": 4,
+      "timestamp": "2026-05-04T12:36:22.970923Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Delivered: UsersService.getStats() + GET /v1/users/me/stats (streak, weakest skill, submission counts, recent reports, credit balance). Dashboard rewritten with above-fold focus card, stats strip, skill activity grid, recent reports. 6 new getStats tests; 60/60 full suite green."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Dashboard loads key stats for the authenticated user"
+          },
+          {
+            "completed": true,
+            "text": "Weakest skill and next recommended action are visible above the fold"
+          },
+          {
+            "completed": true,
+            "text": "Streak, XP, and credit balance are accurate and real-time"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Shows skill activity, latest reports, streak, XP, badges, quests, and credit balance. Learning trend and weak-area analysis. Weakest skill and next recommended action above the fold.",
+        "implementationNotes": "Delivered: UsersService.getStats() + GET /v1/users/me/stats (streak, weakest skill, submission counts, recent reports, credit balance). Dashboard rewritten with above-fold focus card, stats strip, skill activity grid, recent reports. 6 new getStats tests; 60/60 full suite green.",
+        "implementationPlan": "1. API — UsersService.getStats(userId): query scoreReports (last 10, grouped by skill → weakest avg band), submissions (count per skill + streak from consecutive days), wallet (balance + bonusBalance); return { submissionCounts, recentReports, weakestSkill, nextAction, streak, creditBalance, bonusBalance }; wire GET /v1/users/me/stats\n2. Web — dashboard page: fetch /v1/users/me (existing) + /v1/users/me/stats in parallel; render: (a) above-the-fold hero card with weakest skill + next recommended action; (b) stats strip: streak days, credit balance, total submissions; (c) recent reports cards (last 3, skill badge + band + date + link); (d) skill activity row (submission count per skill with quick-start links)\n3. Tests — UsersService stats unit spec: streak computation (consecutive days), weakest skill derivation (lowest avg band), empty state (new user with no submissions)",
+        "labels": [
+          "dashboard",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 8: Dashboard and progress"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "x9k47s",
+      "version": 5,
+      "timestamp": "2026-05-04T12:36:35.484248Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Dashboard loads key stats for the authenticated user",
+            "completed": true
+          },
+          {
+            "text": "Weakest skill and next recommended action are visible above the fold",
+            "completed": true
+          },
+          {
+            "text": "Streak, XP, and credit balance are accurate and real-time",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Shows skill activity, latest reports, streak, XP, badges, quests, and credit balance. Learning trend and weak-area analysis. Weakest skill and next recommended action above the fold.",
+        "implementationNotes": "Delivered: UsersService.getStats() + GET /v1/users/me/stats (streak, weakest skill, submission counts, recent reports, credit balance). Dashboard rewritten with above-fold focus card, stats strip, skill activity grid, recent reports. 6 new getStats tests; 60/60 full suite green.",
+        "implementationPlan": "1. API — UsersService.getStats(userId): query scoreReports (last 10, grouped by skill → weakest avg band), submissions (count per skill + streak from consecutive days), wallet (balance + bonusBalance); return { submissionCounts, recentReports, weakestSkill, nextAction, streak, creditBalance, bonusBalance }; wire GET /v1/users/me/stats\n2. Web — dashboard page: fetch /v1/users/me (existing) + /v1/users/me/stats in parallel; render: (a) above-the-fold hero card with weakest skill + next recommended action; (b) stats strip: streak days, credit balance, total submissions; (c) recent reports cards (last 3, skill badge + band + date + link); (d) skill activity row (submission count per skill with quick-start links)\n3. Tests — UsersService stats unit spec: streak computation (consecutive days), weakest skill derivation (lowest avg band), empty state (new user with no submissions)",
+        "labels": [
+          "dashboard",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 8: Dashboard and progress"
       }
     }
