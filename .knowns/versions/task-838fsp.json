@@ -1,6 +1,6 @@
 {
   "taskId": "838fsp",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,16 +22,16 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can reopen any past report",
-            "completed": false
+            "completed": false,
+            "text": "User can reopen any past report"
           },
           {
-            "text": "User can compare current vs previous report for the same skill",
-            "completed": false
+            "completed": false,
+            "text": "User can compare current vs previous report for the same skill"
           },
           {
-            "text": "Recommendations can be converted to personal improvement tasks",
-            "completed": false
+            "completed": false,
+            "text": "Recommendations can be converted to personal improvement tasks"
           }
         ],
         "description": "Every scored submission creates a report. Reports show overall band, criterion detail, evidence-based explanation, strengths, weaknesses, and improvement tasks. Historical comparison supported.",
@@ -41,6 +41,168 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 7: Reports and improvement plans"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "838fsp",
+      "version": 2,
+      "timestamp": "2026-05-04T12:19:46.24699Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can reopen any past report"
+          },
+          {
+            "completed": false,
+            "text": "User can compare current vs previous report for the same skill"
+          },
+          {
+            "completed": false,
+            "text": "Recommendations can be converted to personal improvement tasks"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Every scored submission creates a report. Reports show overall band, criterion detail, evidence-based explanation, strengths, weaknesses, and improvement tasks. Historical comparison supported.",
+        "labels": [
+          "reports",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 7: Reports and improvement plans"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "838fsp",
+      "version": 3,
+      "timestamp": "2026-05-04T12:21:05.284934Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. API — ReportsService.compare(reportId, userId): fetch current report + find most recent prior report for same skill → return { current: { band, criteria[] }, previous: { band, criteria[] } | null }; add GET /v1/reports/:id/compare endpoint\n2. API — ReportsService.acceptTask(reportId, taskId, userId): guard ownership, set ImprovementTask.status → 'active'; add POST /v1/reports/:reportId/tasks/:taskId/accept endpoint\n3. Web — /reports list page: fetch GET /v1/reports, render card per report (skill badge, band, date, link to /reports/[id]); auth guard + redirect\n4. Web — /reports/[id] improvements: make skill-agnostic title/back-link; add \"Compare with previous\" section (fetch /compare, show band delta); add \"Add to my tasks\" button per improvement task (calls POST .../accept, toggles to accepted state)\n5. Tests — ReportsService unit spec: findById (returns report), listByUser (returns list), compare (with/without prior), acceptTask (ownership guard)"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can reopen any past report"
+          },
+          {
+            "completed": false,
+            "text": "User can compare current vs previous report for the same skill"
+          },
+          {
+            "completed": false,
+            "text": "Recommendations can be converted to personal improvement tasks"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Every scored submission creates a report. Reports show overall band, criterion detail, evidence-based explanation, strengths, weaknesses, and improvement tasks. Historical comparison supported.",
+        "implementationPlan": "1. API — ReportsService.compare(reportId, userId): fetch current report + find most recent prior report for same skill → return { current: { band, criteria[] }, previous: { band, criteria[] } | null }; add GET /v1/reports/:id/compare endpoint\n2. API — ReportsService.acceptTask(reportId, taskId, userId): guard ownership, set ImprovementTask.status → 'active'; add POST /v1/reports/:reportId/tasks/:taskId/accept endpoint\n3. Web — /reports list page: fetch GET /v1/reports, render card per report (skill badge, band, date, link to /reports/[id]); auth guard + redirect\n4. Web — /reports/[id] improvements: make skill-agnostic title/back-link; add \"Compare with previous\" section (fetch /compare, show band delta); add \"Add to my tasks\" button per improvement task (calls POST .../accept, toggles to accepted state)\n5. Tests — ReportsService unit spec: findById (returns report), listByUser (returns list), compare (with/without prior), acceptTask (ownership guard)",
+        "labels": [
+          "reports",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 7: Reports and improvement plans"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "838fsp",
+      "version": 4,
+      "timestamp": "2026-05-04T12:23:45.281052Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Delivered: ReportsService.compare() + acceptTask(), GET /reports/:id/compare, POST /reports/:reportId/tasks/:taskId/accept, /reports list page, ReportView client component (skill-agnostic, compare panel, accept button), /reports/[id] rewritten as server+client split. 10 new tests, 54/54 full suite green."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "User can reopen any past report"
+          },
+          {
+            "completed": true,
+            "text": "User can compare current vs previous report for the same skill"
+          },
+          {
+            "completed": true,
+            "text": "Recommendations can be converted to personal improvement tasks"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Every scored submission creates a report. Reports show overall band, criterion detail, evidence-based explanation, strengths, weaknesses, and improvement tasks. Historical comparison supported.",
+        "implementationNotes": "Delivered: ReportsService.compare() + acceptTask(), GET /reports/:id/compare, POST /reports/:reportId/tasks/:taskId/accept, /reports list page, ReportView client component (skill-agnostic, compare panel, accept button), /reports/[id] rewritten as server+client split. 10 new tests, 54/54 full suite green.",
+        "implementationPlan": "1. API — ReportsService.compare(reportId, userId): fetch current report + find most recent prior report for same skill → return { current: { band, criteria[] }, previous: { band, criteria[] } | null }; add GET /v1/reports/:id/compare endpoint\n2. API — ReportsService.acceptTask(reportId, taskId, userId): guard ownership, set ImprovementTask.status → 'active'; add POST /v1/reports/:reportId/tasks/:taskId/accept endpoint\n3. Web — /reports list page: fetch GET /v1/reports, render card per report (skill badge, band, date, link to /reports/[id]); auth guard + redirect\n4. Web — /reports/[id] improvements: make skill-agnostic title/back-link; add \"Compare with previous\" section (fetch /compare, show band delta); add \"Add to my tasks\" button per improvement task (calls POST .../accept, toggles to accepted state)\n5. Tests — ReportsService unit spec: findById (returns report), listByUser (returns list), compare (with/without prior), acceptTask (ownership guard)",
+        "labels": [
+          "reports",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 7: Reports and improvement plans"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "838fsp",
+      "version": 5,
+      "timestamp": "2026-05-04T12:23:53.766868Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can reopen any past report",
+            "completed": true
+          },
+          {
+            "text": "User can compare current vs previous report for the same skill",
+            "completed": true
+          },
+          {
+            "text": "Recommendations can be converted to personal improvement tasks",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Every scored submission creates a report. Reports show overall band, criterion detail, evidence-based explanation, strengths, weaknesses, and improvement tasks. Historical comparison supported.",
+        "implementationNotes": "Delivered: ReportsService.compare() + acceptTask(), GET /reports/:id/compare, POST /reports/:reportId/tasks/:taskId/accept, /reports list page, ReportView client component (skill-agnostic, compare panel, accept button), /reports/[id] rewritten as server+client split. 10 new tests, 54/54 full suite green.",
+        "implementationPlan": "1. API — ReportsService.compare(reportId, userId): fetch current report + find most recent prior report for same skill → return { current: { band, criteria[] }, previous: { band, criteria[] } | null }; add GET /v1/reports/:id/compare endpoint\n2. API — ReportsService.acceptTask(reportId, taskId, userId): guard ownership, set ImprovementTask.status → 'active'; add POST /v1/reports/:reportId/tasks/:taskId/accept endpoint\n3. Web — /reports list page: fetch GET /v1/reports, render card per report (skill badge, band, date, link to /reports/[id]); auth guard + redirect\n4. Web — /reports/[id] improvements: make skill-agnostic title/back-link; add \"Compare with previous\" section (fetch /compare, show band delta); add \"Add to my tasks\" button per improvement task (calls POST .../accept, toggles to accepted state)\n5. Tests — ReportsService unit spec: findById (returns report), listByUser (returns list), compare (with/without prior), acceptTask (ownership guard)",
+        "labels": [
+          "reports",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 7: Reports and improvement plans"
       }
     }

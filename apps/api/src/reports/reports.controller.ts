@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common'
+import { Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { UsersService } from '../users/users.service'
@@ -21,5 +21,21 @@ export class ReportsController {
   async list(@CurrentUser() supabaseUser: SupabaseUser, @Query('skill') skill?: string) {
     const appUser = await this.users.findOrCreate(supabaseUser)
     return this.reports.listByUser(appUser.id, skill)
+  }
+
+  @Get(':id/compare')
+  async compare(@CurrentUser() supabaseUser: SupabaseUser, @Param('id') id: string) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.reports.compare(id, appUser.id)
+  }
+
+  @Post(':reportId/tasks/:taskId/accept')
+  async acceptTask(
+    @CurrentUser() supabaseUser: SupabaseUser,
+    @Param('reportId') reportId: string,
+    @Param('taskId') taskId: string,
+  ) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.reports.acceptTask(reportId, taskId, appUser.id)
   }
 }

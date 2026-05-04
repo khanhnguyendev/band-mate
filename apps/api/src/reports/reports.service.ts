@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 
 const DISCLAIMER = 'This is an AI-estimated practice score, not an official IELTS result.'
@@ -48,5 +48,46 @@ export class ReportsService {
       take: 20,
       select: { id: true, skill: true, overallBand: true, createdAt: true },
     })
+  }
+
+  async compare(reportId: string, userId: string) {
+    const current = await this.prisma.scoreReport.findFirst({
+      where: { id: reportId, userId },
+      include: { criterionRows: { orderBy: { criterionName: 'asc' } } },
+    })
+    if (!current) throw new NotFoundException('Report not found')
+
+    const previous = await this.prisma.scoreReport.findFirst({
+      where: { userId, skill: current.skill, id: { not: reportId }, createdAt: { lt: current.createdAt } },
+      orderBy: { createdAt: 'desc' },
+      include: { criterionRows: { orderBy: { criterionName: 'asc' } } },
+    })
+
+    const shape = (r: typeof current) => ({
+      reportId: r.id,
+      band: Number(r.overallBand),
+      createdAt: r.createdAt,
+      criteria: r.criterionRows.map((c) => ({ name: c.criterionName, band: Number(c.band) })),
+    })
+
+    return {
+      skill: current.skill,
+      current: shape(current),
+      previous: previous ? shape(previous) : null,
+    }
+  }
+
+  async acceptTask(reportId: string, taskId: string, userId: string) {
+    const task = await this.prisma.improvementTask.findFirst({
+      where: { id: taskId, reportId },
+    })
+    if (!task) throw new NotFoundException('Improvement task not found')
+    if (task.userId !== userId) throw new ForbiddenException()
+
+    await this.prisma.improvementTask.update({
+      where: { id: taskId },
+      data: { status: 'active' },
+    })
+    return { taskId, status: 'active' }
   }
 }
