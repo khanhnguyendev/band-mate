@@ -1,6 +1,6 @@
 {
   "taskId": "bjthky",
-  "currentVersion": 1,
+  "currentVersion": 4,
   "versions": [
     {
       "id": "v1",
@@ -22,16 +22,16 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can complete a Reading set end to end",
-            "completed": false
+            "completed": false,
+            "text": "User can complete a Reading set end to end"
           },
           {
-            "text": "Score is instant",
-            "completed": false
+            "completed": false,
+            "text": "Score is instant"
           },
           {
-            "text": "User can earn small bonus credits from validated completion",
-            "completed": false
+            "completed": false,
+            "text": "User can earn small bonus credits from validated completion"
           }
         ],
         "description": "Reading sets with questions and answer keys. Instant auto-scoring on submit. Eligible completions earn small bonus credits. Phase 2 — gated behind feature flag in MVP.",
@@ -41,6 +41,133 @@
         ],
         "priority": "medium",
         "status": "todo",
+        "title": "Module 5: Reading practice"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "bjthky",
+      "version": 2,
+      "timestamp": "2026-05-02T03:01:15.018153Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can complete a Reading set end to end"
+          },
+          {
+            "completed": false,
+            "text": "Score is instant"
+          },
+          {
+            "completed": false,
+            "text": "User can earn small bonus credits from validated completion"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Reading sets with questions and answer keys. Instant auto-scoring on submit. Eligible completions earn small bonus credits. Phase 2 — gated behind feature flag in MVP.",
+        "labels": [
+          "reading",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 5: Reading practice"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "bjthky",
+      "version": 3,
+      "timestamp": "2026-05-02T03:02:42.90875Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Prisma seed: add 1 reading question set (Academic passage + 5 True/False/Not Given questions) with `answerKey: { answer: '...' }` on each Question; questions seeded as part of the set\n2. QuestionsService.findReading() + GET /v1/questions/reading: same pattern as findWriting/findSpeaking; route throws ForbiddenException if FEATURE_READING env var is not 'true'\n3. ReadingService.submitReading(userId, setId, answers): loads all questions for the set with answer keys, scores synchronously (case-insensitive compare), creates Submission (status=completed, skill=reading, inputText=JSON.stringify(answers)), grants 1 bonus credit via WalletService.grant() with idempotency key `reading-bonus:{userId}:{setId}` (first completion only); returns { score, total, percentage, breakdown[] } immediately — no queue, no AI\n4. ReadingController + ReadingModule: wire service + controller; feature flag guard (ForbiddenException if FEATURE_READING !== 'true'); import into AppModule\n5. Web: /reading page (feature-flag check → redirect to dashboard if disabled; otherwise show set cards); /reading/[setId] page with passage text, question list, answer form; on submit calls POST /v1/submissions/reading and shows inline results (score banner + per-question breakdown)\n6. Tests: ReadingService spec — full correct answers, partial score, bonus credit grant, idempotent double-submit (second submit doesn't double-grant); NotFoundException for unknown set"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can complete a Reading set end to end"
+          },
+          {
+            "completed": false,
+            "text": "Score is instant"
+          },
+          {
+            "completed": false,
+            "text": "User can earn small bonus credits from validated completion"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Reading sets with questions and answer keys. Instant auto-scoring on submit. Eligible completions earn small bonus credits. Phase 2 — gated behind feature flag in MVP.",
+        "implementationPlan": "1. Prisma seed: add 1 reading question set (Academic passage + 5 True/False/Not Given questions) with `answerKey: { answer: '...' }` on each Question; questions seeded as part of the set\n2. QuestionsService.findReading() + GET /v1/questions/reading: same pattern as findWriting/findSpeaking; route throws ForbiddenException if FEATURE_READING env var is not 'true'\n3. ReadingService.submitReading(userId, setId, answers): loads all questions for the set with answer keys, scores synchronously (case-insensitive compare), creates Submission (status=completed, skill=reading, inputText=JSON.stringify(answers)), grants 1 bonus credit via WalletService.grant() with idempotency key `reading-bonus:{userId}:{setId}` (first completion only); returns { score, total, percentage, breakdown[] } immediately — no queue, no AI\n4. ReadingController + ReadingModule: wire service + controller; feature flag guard (ForbiddenException if FEATURE_READING !== 'true'); import into AppModule\n5. Web: /reading page (feature-flag check → redirect to dashboard if disabled; otherwise show set cards); /reading/[setId] page with passage text, question list, answer form; on submit calls POST /v1/submissions/reading and shows inline results (score banner + per-question breakdown)\n6. Tests: ReadingService spec — full correct answers, partial score, bonus credit grant, idempotent double-submit (second submit doesn't double-grant); NotFoundException for unknown set",
+        "labels": [
+          "reading",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 5: Reading practice"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "bjthky",
+      "version": 4,
+      "timestamp": "2026-05-04T11:58:49.244629Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        },
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Implemented: seed (1 academic reading set, 5 T/F/NG questions, passage stored in mediaUrl), QuestionsService.findReading(), ReadingService (sync scoring, case-insensitive, bonus grant via idempotency key), ReadingController (GET /reading/sets, POST /reading/sets/:setId/submit), ReadingModule, FEATURE_READING flag guard, /reading browser page, /reading/[setId] server+client split (ReadingQuiz component). 37/37 tests pass."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can complete a Reading set end to end",
+            "completed": true
+          },
+          {
+            "text": "Score is instant",
+            "completed": true
+          },
+          {
+            "text": "User can earn small bonus credits from validated completion",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Reading sets with questions and answer keys. Instant auto-scoring on submit. Eligible completions earn small bonus credits. Phase 2 — gated behind feature flag in MVP.",
+        "implementationNotes": "Implemented: seed (1 academic reading set, 5 T/F/NG questions, passage stored in mediaUrl), QuestionsService.findReading(), ReadingService (sync scoring, case-insensitive, bonus grant via idempotency key), ReadingController (GET /reading/sets, POST /reading/sets/:setId/submit), ReadingModule, FEATURE_READING flag guard, /reading browser page, /reading/[setId] server+client split (ReadingQuiz component). 37/37 tests pass.",
+        "implementationPlan": "1. Prisma seed: add 1 reading question set (Academic passage + 5 True/False/Not Given questions) with `answerKey: { answer: '...' }` on each Question; questions seeded as part of the set\n2. QuestionsService.findReading() + GET /v1/questions/reading: same pattern as findWriting/findSpeaking; route throws ForbiddenException if FEATURE_READING env var is not 'true'\n3. ReadingService.submitReading(userId, setId, answers): loads all questions for the set with answer keys, scores synchronously (case-insensitive compare), creates Submission (status=completed, skill=reading, inputText=JSON.stringify(answers)), grants 1 bonus credit via WalletService.grant() with idempotency key `reading-bonus:{userId}:{setId}` (first completion only); returns { score, total, percentage, breakdown[] } immediately — no queue, no AI\n4. ReadingController + ReadingModule: wire service + controller; feature flag guard (ForbiddenException if FEATURE_READING !== 'true'); import into AppModule\n5. Web: /reading page (feature-flag check → redirect to dashboard if disabled; otherwise show set cards); /reading/[setId] page with passage text, question list, answer form; on submit calls POST /v1/submissions/reading and shows inline results (score banner + per-question breakdown)\n6. Tests: ReadingService spec — full correct answers, partial score, bonus credit grant, idempotent double-submit (second submit doesn't double-grant); NotFoundException for unknown set",
+        "labels": [
+          "reading",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "done",
         "title": "Module 5: Reading practice"
       }
     }

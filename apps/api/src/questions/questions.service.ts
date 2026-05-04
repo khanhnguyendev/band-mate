@@ -19,6 +19,18 @@ export class QuestionsService {
     })
   }
 
+  async findListening(filters: { difficulty?: Difficulty }) {
+    return this.prisma.questionSet.findMany({
+      where: {
+        skill: Skill.listening,
+        isPublished: true,
+        ...(filters.difficulty ? { difficulty: filters.difficulty } : {}),
+      },
+      include: { questions: { orderBy: { order: 'asc' } } },
+      orderBy: { createdAt: 'asc' },
+    })
+  }
+
   async findReading(filters: { difficulty?: Difficulty }) {
     return this.prisma.questionSet.findMany({
       where: {

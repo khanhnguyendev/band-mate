@@ -1,6 +1,6 @@
 {
   "taskId": "9f839t",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,20 +22,20 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can browse and select a Writing task",
-            "completed": false
+            "completed": false,
+            "text": "User can browse and select a Writing task"
           },
           {
-            "text": "Credits are reserved before scoring begins",
-            "completed": false
+            "completed": false,
+            "text": "Credits are reserved before scoring begins"
           },
           {
-            "text": "Report includes overall estimated band, criterion breakdown, explanation, and next steps",
-            "completed": false
+            "completed": false,
+            "text": "Report includes overall estimated band, criterion breakdown, explanation, and next steps"
           },
           {
-            "text": "Failed score attempts trigger automatic credit refund",
-            "completed": false
+            "completed": false,
+            "text": "Failed score attempts trigger automatic credit refund"
           }
         ],
         "description": "Writing tasks browsable by type, difficulty, and estimated time. Editor with timer and draft state. AI scoring on submit with credit reservation. Report with criterion breakdown and next steps.",
@@ -46,6 +46,188 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 3: Writing practice"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "9f839t",
+      "version": 2,
+      "timestamp": "2026-05-01T13:37:50.191648Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can browse and select a Writing task"
+          },
+          {
+            "completed": false,
+            "text": "Credits are reserved before scoring begins"
+          },
+          {
+            "completed": false,
+            "text": "Report includes overall estimated band, criterion breakdown, explanation, and next steps"
+          },
+          {
+            "completed": false,
+            "text": "Failed score attempts trigger automatic credit refund"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Writing tasks browsable by type, difficulty, and estimated time. Editor with timer and draft state. AI scoring on submit with credit reservation. Report with criterion breakdown and next steps.",
+        "labels": [
+          "writing",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 3: Writing practice"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "9f839t",
+      "version": 3,
+      "timestamp": "2026-05-01T13:38:52.525471Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Prisma: add QuestionSet, Question, Submission, ScoringJob, ScoreReport, CriterionRow, ImprovementTask, PromptPack models to schema; seed 3 writing questions (Task 1 + Task 2) and one active PromptPack\n2. WalletService: add reserve(userId, amount, desc, idempotencyKey) — atomic deduction in serializable tx, throws 402 if insufficient; add refund(walletId, amount, reservationLedgerEntryId, idempotencyKey) — restores balance via grant-type ledger entry\n3. API: QuestionsModule — GET /v1/questions/writing?type=task1|task2\u0026difficulty=band5..band8 returns question sets with first question prompt; no credit cost\n4. API: SubmissionsModule — POST /v1/submissions/writing validates text length (≥50 chars), reserves credits via WalletService.reserve(), creates Submission row (status=queued), enqueues BullMQ score-writing job, returns 202 + submissionId; GET /v1/submissions/:id/status polls row status\n5. API: BullMQ scoring worker (apps/api/src/workers/score-writing.worker.ts) — loads active PromptPack, calls Anthropic API, validates/clamps output (0–9 band), persists ScoreReport + CriterionRow rows + ImprovementTask rows, calls WalletService.consume(); on max-retries failure calls WalletService.refund() and sets submission status=failed; idempotent via ScoringJob status check\n6. API: ReportsModule — GET /v1/reports/:id returns full report (overallBand, disclaimer, criteria[], improvementTasks[])\n7. Web: /writing — question browser page (cards: task type, difficulty, estimated time); writing editor page with countdown timer + word count + localStorage draft autosave; submit → poll GET /submissions/:id/status every 3s → redirect to /reports/:id on completion\n8. Tests: WalletService.reserve() unit spec (happy path + insufficient credits); WalletService.refund() spec; SubmissionsService unit spec (reserve → enqueue flow); scoring worker unit spec (happy path + failure/refund path)"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can browse and select a Writing task"
+          },
+          {
+            "completed": false,
+            "text": "Credits are reserved before scoring begins"
+          },
+          {
+            "completed": false,
+            "text": "Report includes overall estimated band, criterion breakdown, explanation, and next steps"
+          },
+          {
+            "completed": false,
+            "text": "Failed score attempts trigger automatic credit refund"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Writing tasks browsable by type, difficulty, and estimated time. Editor with timer and draft state. AI scoring on submit with credit reservation. Report with criterion breakdown and next steps.",
+        "implementationPlan": "1. Prisma: add QuestionSet, Question, Submission, ScoringJob, ScoreReport, CriterionRow, ImprovementTask, PromptPack models to schema; seed 3 writing questions (Task 1 + Task 2) and one active PromptPack\n2. WalletService: add reserve(userId, amount, desc, idempotencyKey) — atomic deduction in serializable tx, throws 402 if insufficient; add refund(walletId, amount, reservationLedgerEntryId, idempotencyKey) — restores balance via grant-type ledger entry\n3. API: QuestionsModule — GET /v1/questions/writing?type=task1|task2\u0026difficulty=band5..band8 returns question sets with first question prompt; no credit cost\n4. API: SubmissionsModule — POST /v1/submissions/writing validates text length (≥50 chars), reserves credits via WalletService.reserve(), creates Submission row (status=queued), enqueues BullMQ score-writing job, returns 202 + submissionId; GET /v1/submissions/:id/status polls row status\n5. API: BullMQ scoring worker (apps/api/src/workers/score-writing.worker.ts) — loads active PromptPack, calls Anthropic API, validates/clamps output (0–9 band), persists ScoreReport + CriterionRow rows + ImprovementTask rows, calls WalletService.consume(); on max-retries failure calls WalletService.refund() and sets submission status=failed; idempotent via ScoringJob status check\n6. API: ReportsModule — GET /v1/reports/:id returns full report (overallBand, disclaimer, criteria[], improvementTasks[])\n7. Web: /writing — question browser page (cards: task type, difficulty, estimated time); writing editor page with countdown timer + word count + localStorage draft autosave; submit → poll GET /submissions/:id/status every 3s → redirect to /reports/:id on completion\n8. Tests: WalletService.reserve() unit spec (happy path + insufficient credits); WalletService.refund() spec; SubmissionsService unit spec (reserve → enqueue flow); scoring worker unit spec (happy path + failure/refund path)",
+        "labels": [
+          "writing",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 3: Writing practice"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "9f839t",
+      "version": 4,
+      "timestamp": "2026-05-01T23:56:40.435934Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "All 10 tests pass: WalletService.reserve (happy path, 402 on insufficient, idempotency), WalletService.refund (happy path, idempotency), SubmissionsService.submitWriting (reserve→enqueue, NotFoundException), ScoreWritingWorker (happy path, idempotency, failure+refund). Fixed: resetAllMocks() clears mock implementations — wallet mocks must be re-stubbed in beforeEach."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "User can browse and select a Writing task"
+          },
+          {
+            "completed": true,
+            "text": "Credits are reserved before scoring begins"
+          },
+          {
+            "completed": true,
+            "text": "Report includes overall estimated band, criterion breakdown, explanation, and next steps"
+          },
+          {
+            "completed": true,
+            "text": "Failed score attempts trigger automatic credit refund"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Writing tasks browsable by type, difficulty, and estimated time. Editor with timer and draft state. AI scoring on submit with credit reservation. Report with criterion breakdown and next steps.",
+        "implementationNotes": "All 10 tests pass: WalletService.reserve (happy path, 402 on insufficient, idempotency), WalletService.refund (happy path, idempotency), SubmissionsService.submitWriting (reserve→enqueue, NotFoundException), ScoreWritingWorker (happy path, idempotency, failure+refund). Fixed: resetAllMocks() clears mock implementations — wallet mocks must be re-stubbed in beforeEach.",
+        "implementationPlan": "1. Prisma: add QuestionSet, Question, Submission, ScoringJob, ScoreReport, CriterionRow, ImprovementTask, PromptPack models to schema; seed 3 writing questions (Task 1 + Task 2) and one active PromptPack\n2. WalletService: add reserve(userId, amount, desc, idempotencyKey) — atomic deduction in serializable tx, throws 402 if insufficient; add refund(walletId, amount, reservationLedgerEntryId, idempotencyKey) — restores balance via grant-type ledger entry\n3. API: QuestionsModule — GET /v1/questions/writing?type=task1|task2\u0026difficulty=band5..band8 returns question sets with first question prompt; no credit cost\n4. API: SubmissionsModule — POST /v1/submissions/writing validates text length (≥50 chars), reserves credits via WalletService.reserve(), creates Submission row (status=queued), enqueues BullMQ score-writing job, returns 202 + submissionId; GET /v1/submissions/:id/status polls row status\n5. API: BullMQ scoring worker (apps/api/src/workers/score-writing.worker.ts) — loads active PromptPack, calls Anthropic API, validates/clamps output (0–9 band), persists ScoreReport + CriterionRow rows + ImprovementTask rows, calls WalletService.consume(); on max-retries failure calls WalletService.refund() and sets submission status=failed; idempotent via ScoringJob status check\n6. API: ReportsModule — GET /v1/reports/:id returns full report (overallBand, disclaimer, criteria[], improvementTasks[])\n7. Web: /writing — question browser page (cards: task type, difficulty, estimated time); writing editor page with countdown timer + word count + localStorage draft autosave; submit → poll GET /submissions/:id/status every 3s → redirect to /reports/:id on completion\n8. Tests: WalletService.reserve() unit spec (happy path + insufficient credits); WalletService.refund() spec; SubmissionsService unit spec (reserve → enqueue flow); scoring worker unit spec (happy path + failure/refund path)",
+        "labels": [
+          "writing",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 3: Writing practice"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "9f839t",
+      "version": 5,
+      "timestamp": "2026-05-01T23:56:45.919856Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can browse and select a Writing task",
+            "completed": true
+          },
+          {
+            "text": "Credits are reserved before scoring begins",
+            "completed": true
+          },
+          {
+            "text": "Report includes overall estimated band, criterion breakdown, explanation, and next steps",
+            "completed": true
+          },
+          {
+            "text": "Failed score attempts trigger automatic credit refund",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Writing tasks browsable by type, difficulty, and estimated time. Editor with timer and draft state. AI scoring on submit with credit reservation. Report with criterion breakdown and next steps.",
+        "implementationNotes": "All 10 tests pass: WalletService.reserve (happy path, 402 on insufficient, idempotency), WalletService.refund (happy path, idempotency), SubmissionsService.submitWriting (reserve→enqueue, NotFoundException), ScoreWritingWorker (happy path, idempotency, failure+refund). Fixed: resetAllMocks() clears mock implementations — wallet mocks must be re-stubbed in beforeEach.",
+        "implementationPlan": "1. Prisma: add QuestionSet, Question, Submission, ScoringJob, ScoreReport, CriterionRow, ImprovementTask, PromptPack models to schema; seed 3 writing questions (Task 1 + Task 2) and one active PromptPack\n2. WalletService: add reserve(userId, amount, desc, idempotencyKey) — atomic deduction in serializable tx, throws 402 if insufficient; add refund(walletId, amount, reservationLedgerEntryId, idempotencyKey) — restores balance via grant-type ledger entry\n3. API: QuestionsModule — GET /v1/questions/writing?type=task1|task2\u0026difficulty=band5..band8 returns question sets with first question prompt; no credit cost\n4. API: SubmissionsModule — POST /v1/submissions/writing validates text length (≥50 chars), reserves credits via WalletService.reserve(), creates Submission row (status=queued), enqueues BullMQ score-writing job, returns 202 + submissionId; GET /v1/submissions/:id/status polls row status\n5. API: BullMQ scoring worker (apps/api/src/workers/score-writing.worker.ts) — loads active PromptPack, calls Anthropic API, validates/clamps output (0–9 band), persists ScoreReport + CriterionRow rows + ImprovementTask rows, calls WalletService.consume(); on max-retries failure calls WalletService.refund() and sets submission status=failed; idempotent via ScoringJob status check\n6. API: ReportsModule — GET /v1/reports/:id returns full report (overallBand, disclaimer, criteria[], improvementTasks[])\n7. Web: /writing — question browser page (cards: task type, difficulty, estimated time); writing editor page with countdown timer + word count + localStorage draft autosave; submit → poll GET /submissions/:id/status every 3s → redirect to /reports/:id on completion\n8. Tests: WalletService.reserve() unit spec (happy path + insufficient credits); WalletService.refund() spec; SubmissionsService unit spec (reserve → enqueue flow); scoring worker unit spec (happy path + failure/refund path)",
+        "labels": [
+          "writing",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 3: Writing practice"
       }
     }

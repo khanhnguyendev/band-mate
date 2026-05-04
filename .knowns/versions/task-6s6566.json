@@ -1,6 +1,6 @@
 {
   "taskId": "6s6566",
-  "currentVersion": 1,
+  "currentVersion": 4,
   "versions": [
     {
       "id": "v1",
@@ -22,20 +22,20 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can complete a full speaking attempt via record or upload",
-            "completed": false
+            "completed": false,
+            "text": "User can complete a full speaking attempt via record or upload"
           },
           {
-            "text": "Audio is stored in Supabase Storage and transcribed before scoring",
-            "completed": false
+            "completed": false,
+            "text": "Audio is stored in Supabase Storage and transcribed before scoring"
           },
           {
-            "text": "Report covers fluency, pronunciation, lexical resource, and grammar",
-            "completed": false
+            "completed": false,
+            "text": "Report covers fluency, pronunciation, lexical resource, and grammar"
           },
           {
-            "text": "Transcription or scoring failure is handled safely with credit refund",
-            "completed": false
+            "completed": false,
+            "text": "Transcription or scoring failure is handled safely with credit refund"
           }
         ],
         "description": "Speaking prompts by part (1/2/3). Audio record or upload. Transcription before scoring. Speaking-specific report covering fluency, pronunciation, lexical, and grammar.",
@@ -46,6 +46,148 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 4: Speaking practice"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "6s6566",
+      "version": 2,
+      "timestamp": "2026-05-02T02:25:48.596179Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can complete a full speaking attempt via record or upload"
+          },
+          {
+            "completed": false,
+            "text": "Audio is stored in Supabase Storage and transcribed before scoring"
+          },
+          {
+            "completed": false,
+            "text": "Report covers fluency, pronunciation, lexical resource, and grammar"
+          },
+          {
+            "completed": false,
+            "text": "Transcription or scoring failure is handled safely with credit refund"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Speaking prompts by part (1/2/3). Audio record or upload. Transcription before scoring. Speaking-specific report covering fluency, pronunciation, lexical, and grammar.",
+        "labels": [
+          "speaking",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 4: Speaking practice"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "6s6566",
+      "version": 3,
+      "timestamp": "2026-05-02T02:27:39.32856Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Prisma seed: add 3 speaking question sets (Part 1 / Part 2 / Part 3) + active PromptPack `pp-speaking-v1` with system prompt for 4 IELTS speaking criteria and template using {{task_type}}/{{prompt}}/{{transcript}} placeholders\n2. SupabaseAdminService + TranscriptionService: injectable service wrapping `createClient(url, SERVICE_ROLE_KEY)` for worker storage access; TranscriptionService downloads audio blob from `audio-submissions` bucket and calls OpenAI Whisper (`openai` package) for transcript\n3. Upload URL + submitSpeaking: `POST /v1/submissions/speaking/upload-url` returns Supabase Storage signed upload URL + audioKey; `SubmissionsService.submitSpeaking()` reserves 3 credits, creates Submission (skill=speaking, audioKey), enqueues `transcribe-audio` job\n4. TranscribeAudioWorker: idempotent (skip if transcript already set); downloads audio → Whisper → updates submission.transcript → enqueues `score-speaking` job; onFailed (last attempt) → refund + mark failed\n5. ScoreSpeakingWorker: loads speaking PromptPack, calls Claude with transcript, clamps bands, persists ScoreReport with 4 criteria (Fluency \u0026 Coherence, Pronunciation, Lexical Resource, Grammatical Range \u0026 Accuracy), consumes credits; onFailed → refund + mark failed\n6. SpeakingModule wiring: register both workers, queues, TranscriptionService, SupabaseAdminService; add routes to SubmissionsController and SpeakingController\n7. Web: `/speaking` question browser (cards by part) + `/speaking/[questionId]` SpeakingEditor component (MediaRecorder record button + file upload fallback; fetches upload URL, uploads directly to Supabase Storage, submits audioKey, polls status, redirects to /reports/:id); existing report page handles speaking reports\n8. Tests: SubmissionsService.submitSpeaking spec (reserve→enqueue); TranscribeAudioWorker spec (happy path + failure/refund); ScoreSpeakingWorker spec (happy path + idempotency + failure/refund)"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can complete a full speaking attempt via record or upload"
+          },
+          {
+            "completed": false,
+            "text": "Audio is stored in Supabase Storage and transcribed before scoring"
+          },
+          {
+            "completed": false,
+            "text": "Report covers fluency, pronunciation, lexical resource, and grammar"
+          },
+          {
+            "completed": false,
+            "text": "Transcription or scoring failure is handled safely with credit refund"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Speaking prompts by part (1/2/3). Audio record or upload. Transcription before scoring. Speaking-specific report covering fluency, pronunciation, lexical, and grammar.",
+        "implementationPlan": "1. Prisma seed: add 3 speaking question sets (Part 1 / Part 2 / Part 3) + active PromptPack `pp-speaking-v1` with system prompt for 4 IELTS speaking criteria and template using {{task_type}}/{{prompt}}/{{transcript}} placeholders\n2. SupabaseAdminService + TranscriptionService: injectable service wrapping `createClient(url, SERVICE_ROLE_KEY)` for worker storage access; TranscriptionService downloads audio blob from `audio-submissions` bucket and calls OpenAI Whisper (`openai` package) for transcript\n3. Upload URL + submitSpeaking: `POST /v1/submissions/speaking/upload-url` returns Supabase Storage signed upload URL + audioKey; `SubmissionsService.submitSpeaking()` reserves 3 credits, creates Submission (skill=speaking, audioKey), enqueues `transcribe-audio` job\n4. TranscribeAudioWorker: idempotent (skip if transcript already set); downloads audio → Whisper → updates submission.transcript → enqueues `score-speaking` job; onFailed (last attempt) → refund + mark failed\n5. ScoreSpeakingWorker: loads speaking PromptPack, calls Claude with transcript, clamps bands, persists ScoreReport with 4 criteria (Fluency \u0026 Coherence, Pronunciation, Lexical Resource, Grammatical Range \u0026 Accuracy), consumes credits; onFailed → refund + mark failed\n6. SpeakingModule wiring: register both workers, queues, TranscriptionService, SupabaseAdminService; add routes to SubmissionsController and SpeakingController\n7. Web: `/speaking` question browser (cards by part) + `/speaking/[questionId]` SpeakingEditor component (MediaRecorder record button + file upload fallback; fetches upload URL, uploads directly to Supabase Storage, submits audioKey, polls status, redirects to /reports/:id); existing report page handles speaking reports\n8. Tests: SubmissionsService.submitSpeaking spec (reserve→enqueue); TranscribeAudioWorker spec (happy path + failure/refund); ScoreSpeakingWorker spec (happy path + idempotency + failure/refund)",
+        "labels": [
+          "speaking",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 4: Speaking practice"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "6s6566",
+      "version": 4,
+      "timestamp": "2026-05-02T02:37:23.339843Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        },
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Implemented: seed (3 speaking question sets + pp-speaking-v1 PromptPack), TranscriptionService (OpenAI Whisper via openai pkg), TranscribeAudioWorker (idempotent, enqueues score-speaking), ScoreSpeakingWorker (4 criteria: Fluency\u0026Coherence/Pronunciation/Lexical/Grammar), upload-url + submitSpeaking endpoints, SpeakingEditor (MediaRecorder + file upload, polling), /speaking browser page. 30/30 tests pass."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can complete a full speaking attempt via record or upload",
+            "completed": true
+          },
+          {
+            "text": "Audio is stored in Supabase Storage and transcribed before scoring",
+            "completed": true
+          },
+          {
+            "text": "Report covers fluency, pronunciation, lexical resource, and grammar",
+            "completed": true
+          },
+          {
+            "text": "Transcription or scoring failure is handled safely with credit refund",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Speaking prompts by part (1/2/3). Audio record or upload. Transcription before scoring. Speaking-specific report covering fluency, pronunciation, lexical, and grammar.",
+        "implementationNotes": "Implemented: seed (3 speaking question sets + pp-speaking-v1 PromptPack), TranscriptionService (OpenAI Whisper via openai pkg), TranscribeAudioWorker (idempotent, enqueues score-speaking), ScoreSpeakingWorker (4 criteria: Fluency\u0026Coherence/Pronunciation/Lexical/Grammar), upload-url + submitSpeaking endpoints, SpeakingEditor (MediaRecorder + file upload, polling), /speaking browser page. 30/30 tests pass.",
+        "implementationPlan": "1. Prisma seed: add 3 speaking question sets (Part 1 / Part 2 / Part 3) + active PromptPack `pp-speaking-v1` with system prompt for 4 IELTS speaking criteria and template using {{task_type}}/{{prompt}}/{{transcript}} placeholders\n2. SupabaseAdminService + TranscriptionService: injectable service wrapping `createClient(url, SERVICE_ROLE_KEY)` for worker storage access; TranscriptionService downloads audio blob from `audio-submissions` bucket and calls OpenAI Whisper (`openai` package) for transcript\n3. Upload URL + submitSpeaking: `POST /v1/submissions/speaking/upload-url` returns Supabase Storage signed upload URL + audioKey; `SubmissionsService.submitSpeaking()` reserves 3 credits, creates Submission (skill=speaking, audioKey), enqueues `transcribe-audio` job\n4. TranscribeAudioWorker: idempotent (skip if transcript already set); downloads audio → Whisper → updates submission.transcript → enqueues `score-speaking` job; onFailed (last attempt) → refund + mark failed\n5. ScoreSpeakingWorker: loads speaking PromptPack, calls Claude with transcript, clamps bands, persists ScoreReport with 4 criteria (Fluency \u0026 Coherence, Pronunciation, Lexical Resource, Grammatical Range \u0026 Accuracy), consumes credits; onFailed → refund + mark failed\n6. SpeakingModule wiring: register both workers, queues, TranscriptionService, SupabaseAdminService; add routes to SubmissionsController and SpeakingController\n7. Web: `/speaking` question browser (cards by part) + `/speaking/[questionId]` SpeakingEditor component (MediaRecorder record button + file upload fallback; fetches upload URL, uploads directly to Supabase Storage, submits audioKey, polls status, redirects to /reports/:id); existing report page handles speaking reports\n8. Tests: SubmissionsService.submitSpeaking spec (reserve→enqueue); TranscribeAudioWorker spec (happy path + failure/refund); ScoreSpeakingWorker spec (happy path + idempotency + failure/refund)",
+        "labels": [
+          "speaking",
+          "mvp",
+          "ai-scoring"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 4: Speaking practice"
       }
     }

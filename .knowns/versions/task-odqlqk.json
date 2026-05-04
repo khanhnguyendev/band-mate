@@ -1,6 +1,6 @@
 {
   "taskId": "odqlqk",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,12 +22,12 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can play media, answer questions, and receive results",
-            "completed": false
+            "completed": false,
+            "text": "User can play media, answer questions, and receive results"
           },
           {
-            "text": "Completion can trigger quest rewards when eligible",
-            "completed": false
+            "completed": false,
+            "text": "Completion can trigger quest rewards when eligible"
           }
         ],
         "description": "Listening tasks with audio media and questions. Instant auto-scoring. Completions can trigger daily quest rewards. Phase 2 — gated behind feature flag in MVP.",
@@ -37,6 +37,152 @@
         ],
         "priority": "medium",
         "status": "todo",
+        "title": "Module 6: Listening practice"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "odqlqk",
+      "version": 2,
+      "timestamp": "2026-05-04T12:04:26.00021Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can play media, answer questions, and receive results"
+          },
+          {
+            "completed": false,
+            "text": "Completion can trigger quest rewards when eligible"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Listening tasks with audio media and questions. Instant auto-scoring. Completions can trigger daily quest rewards. Phase 2 — gated behind feature flag in MVP.",
+        "labels": [
+          "listening",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 6: Listening practice"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "odqlqk",
+      "version": 3,
+      "timestamp": "2026-05-04T12:04:56.363513Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Prisma seed: add 1 listening question set (Section 1 — conversation) with audio URL in `questionSet` mediaUrl (stored on the first Question's mediaUrl field), 5 MCQ/short-answer questions with `answerKey: { answer: '...' }`; use placeholder audio URL (real audio to be recorded separately)\n2. QuestionsService.findListening() + GET /v1/questions/listening: same pattern as findReading(); route and service guard with FEATURE_LISTENING env var\n3. ListeningService.submitListening(userId, setId, answers): identical sync scoring to ReadingService; grants 1 bonus credit on completion via WalletService.grant() with idempotency key `listening-bonus:{userId}:{setId}`; returns { score, total, percentage, breakdown[] } — quest-reward hook noted for Module 9 integration\n4. ListeningController + ListeningModule: wire service + controller; feature flag guard; import into AppModule\n5. Web: /listening page (redirect to dashboard if NEXT_PUBLIC_FEATURE_LISTENING !== 'true'; set cards with audio badge); /listening/[setId] page — server component passes data to ListeningQuiz client component (HTML5 audio player + MCQ form + inline results on submit, same pattern as ReadingQuiz)\n6. Tests: ListeningService spec — correct/partial scoring, bonus grant, idempotent double-submit, NotFoundException, ForbiddenException, case-insensitive compare (mirrors reading.service.spec.ts structure)"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can play media, answer questions, and receive results"
+          },
+          {
+            "completed": false,
+            "text": "Completion can trigger quest rewards when eligible"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Listening tasks with audio media and questions. Instant auto-scoring. Completions can trigger daily quest rewards. Phase 2 — gated behind feature flag in MVP.",
+        "implementationPlan": "1. Prisma seed: add 1 listening question set (Section 1 — conversation) with audio URL in `questionSet` mediaUrl (stored on the first Question's mediaUrl field), 5 MCQ/short-answer questions with `answerKey: { answer: '...' }`; use placeholder audio URL (real audio to be recorded separately)\n2. QuestionsService.findListening() + GET /v1/questions/listening: same pattern as findReading(); route and service guard with FEATURE_LISTENING env var\n3. ListeningService.submitListening(userId, setId, answers): identical sync scoring to ReadingService; grants 1 bonus credit on completion via WalletService.grant() with idempotency key `listening-bonus:{userId}:{setId}`; returns { score, total, percentage, breakdown[] } — quest-reward hook noted for Module 9 integration\n4. ListeningController + ListeningModule: wire service + controller; feature flag guard; import into AppModule\n5. Web: /listening page (redirect to dashboard if NEXT_PUBLIC_FEATURE_LISTENING !== 'true'; set cards with audio badge); /listening/[setId] page — server component passes data to ListeningQuiz client component (HTML5 audio player + MCQ form + inline results on submit, same pattern as ReadingQuiz)\n6. Tests: ListeningService spec — correct/partial scoring, bonus grant, idempotent double-submit, NotFoundException, ForbiddenException, case-insensitive compare (mirrors reading.service.spec.ts structure)",
+        "labels": [
+          "listening",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 6: Listening practice"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "odqlqk",
+      "version": 4,
+      "timestamp": "2026-05-04T12:11:12.132744Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "All 7 tests pass (44/44 full suite). Files delivered: listening.service.ts, listening.controller.ts, listening.module.ts, ListeningModule in app.module.ts, listening-quiz.tsx, listening/page.tsx, listening/[setId]/page.tsx, seed listening questions."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "User can play media, answer questions, and receive results"
+          },
+          {
+            "completed": true,
+            "text": "Completion can trigger quest rewards when eligible"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Listening tasks with audio media and questions. Instant auto-scoring. Completions can trigger daily quest rewards. Phase 2 — gated behind feature flag in MVP.",
+        "implementationNotes": "All 7 tests pass (44/44 full suite). Files delivered: listening.service.ts, listening.controller.ts, listening.module.ts, ListeningModule in app.module.ts, listening-quiz.tsx, listening/page.tsx, listening/[setId]/page.tsx, seed listening questions.",
+        "implementationPlan": "1. Prisma seed: add 1 listening question set (Section 1 — conversation) with audio URL in `questionSet` mediaUrl (stored on the first Question's mediaUrl field), 5 MCQ/short-answer questions with `answerKey: { answer: '...' }`; use placeholder audio URL (real audio to be recorded separately)\n2. QuestionsService.findListening() + GET /v1/questions/listening: same pattern as findReading(); route and service guard with FEATURE_LISTENING env var\n3. ListeningService.submitListening(userId, setId, answers): identical sync scoring to ReadingService; grants 1 bonus credit on completion via WalletService.grant() with idempotency key `listening-bonus:{userId}:{setId}`; returns { score, total, percentage, breakdown[] } — quest-reward hook noted for Module 9 integration\n4. ListeningController + ListeningModule: wire service + controller; feature flag guard; import into AppModule\n5. Web: /listening page (redirect to dashboard if NEXT_PUBLIC_FEATURE_LISTENING !== 'true'; set cards with audio badge); /listening/[setId] page — server component passes data to ListeningQuiz client component (HTML5 audio player + MCQ form + inline results on submit, same pattern as ReadingQuiz)\n6. Tests: ListeningService spec — correct/partial scoring, bonus grant, idempotent double-submit, NotFoundException, ForbiddenException, case-insensitive compare (mirrors reading.service.spec.ts structure)",
+        "labels": [
+          "listening",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 6: Listening practice"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "odqlqk",
+      "version": 5,
+      "timestamp": "2026-05-04T12:11:20.838024Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can play media, answer questions, and receive results",
+            "completed": true
+          },
+          {
+            "text": "Completion can trigger quest rewards when eligible",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Listening tasks with audio media and questions. Instant auto-scoring. Completions can trigger daily quest rewards. Phase 2 — gated behind feature flag in MVP.",
+        "implementationNotes": "All 7 tests pass (44/44 full suite). Files delivered: listening.service.ts, listening.controller.ts, listening.module.ts, ListeningModule in app.module.ts, listening-quiz.tsx, listening/page.tsx, listening/[setId]/page.tsx, seed listening questions.",
+        "implementationPlan": "1. Prisma seed: add 1 listening question set (Section 1 — conversation) with audio URL in `questionSet` mediaUrl (stored on the first Question's mediaUrl field), 5 MCQ/short-answer questions with `answerKey: { answer: '...' }`; use placeholder audio URL (real audio to be recorded separately)\n2. QuestionsService.findListening() + GET /v1/questions/listening: same pattern as findReading(); route and service guard with FEATURE_LISTENING env var\n3. ListeningService.submitListening(userId, setId, answers): identical sync scoring to ReadingService; grants 1 bonus credit on completion via WalletService.grant() with idempotency key `listening-bonus:{userId}:{setId}`; returns { score, total, percentage, breakdown[] } — quest-reward hook noted for Module 9 integration\n4. ListeningController + ListeningModule: wire service + controller; feature flag guard; import into AppModule\n5. Web: /listening page (redirect to dashboard if NEXT_PUBLIC_FEATURE_LISTENING !== 'true'; set cards with audio badge); /listening/[setId] page — server component passes data to ListeningQuiz client component (HTML5 audio player + MCQ form + inline results on submit, same pattern as ReadingQuiz)\n6. Tests: ListeningService spec — correct/partial scoring, bonus grant, idempotent double-submit, NotFoundException, ForbiddenException, case-insensitive compare (mirrors reading.service.spec.ts structure)",
+        "labels": [
+          "listening",
+          "phase-2"
+        ],
+        "priority": "medium",
+        "status": "done",
         "title": "Module 6: Listening practice"
       }
     }

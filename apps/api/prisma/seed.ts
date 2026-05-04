@@ -343,6 +343,48 @@ Renewable energy adoption has accelerated markedly over the past decade. Solar p
     })
   }
   console.log('✓ Reading questions seeded')
+
+  // ─── Listening Question Set ────────────────────────────────────────────────
+  const listeningSet1 = await prisma.questionSet.upsert({
+    where: { id: 'qs-listening-s1-001' },
+    update: {},
+    create: {
+      id: 'qs-listening-s1-001',
+      skill: 'listening',
+      title: 'Section 1 — Apartment Enquiry',
+      taskType: 'task1',
+      difficulty: 'band6',
+      estimatedMinutes: 10,
+    },
+  })
+
+  // Audio URL stored in mediaUrl of the first question; placeholder until real audio is recorded
+  const LISTENING_AUDIO_URL = 'https://cdn.bandmate.app/audio/sample-listening-s1-001.mp3'
+
+  const listeningQuestions = [
+    { id: 'q-listening-001', prompt: 'What is the monthly rent for the apartment?', answerKey: { answer: '$950' }, order: 1 },
+    { id: 'q-listening-002', prompt: 'How many bedrooms does the apartment have?', answerKey: { answer: 'two' }, order: 2 },
+    { id: 'q-listening-003', prompt: 'Which floor is the apartment on?', answerKey: { answer: 'third' }, order: 3 },
+    { id: 'q-listening-004', prompt: 'Is parking included in the rent?', answerKey: { answer: 'yes' }, order: 4 },
+    { id: 'q-listening-005', prompt: 'When is the earliest move-in date?', answerKey: { answer: '1st of next month' }, order: 5 },
+  ]
+
+  for (let i = 0; i < listeningQuestions.length; i++) {
+    const q = listeningQuestions[i]
+    await prisma.question.upsert({
+      where: { id: q.id },
+      update: {},
+      create: {
+        id: q.id,
+        setId: listeningSet1.id,
+        prompt: q.prompt,
+        answerKey: q.answerKey,
+        order: q.order,
+        mediaUrl: i === 0 ? LISTENING_AUDIO_URL : null,
+      },
+    })
+  }
+  console.log('✓ Listening questions seeded')
 }
 
 main()
