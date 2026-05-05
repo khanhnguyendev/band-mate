@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import { QuestPanel } from '@/components/gamification/quest-panel'
+import { Mascot } from '@/components/mascot/mascot'
+import { SoundToggle } from '@/components/mascot/sound-toggle'
 
 const SKILL_LABEL: Record<string, string> = {
   writing: 'Writing', speaking: 'Speaking', reading: 'Reading', listening: 'Listening',
@@ -73,7 +75,10 @@ export default async function DashboardPage({ searchParams }: Props) {
     <main style={{ maxWidth: 720, margin: '0 auto', padding: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1 style={{ margin: 0 }}>Dashboard</h1>
-        <Link href="/reports" style={{ color: '#6366f1', fontSize: '0.9rem' }}>My Reports →</Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <SoundToggle />
+          <Link href="/reports" style={{ color: '#6366f1', fontSize: '0.9rem' }}>My Reports →</Link>
+        </div>
       </div>
       <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>Welcome back, {profile.name}</p>
 
@@ -101,10 +106,23 @@ export default async function DashboardPage({ searchParams }: Props) {
         </div>
       )}
 
+      {/* Empty state — no sessions yet */}
+      {totalSubmissions === 0 && (
+        <div style={{ marginTop: '1.5rem', textAlign: 'center', padding: '2rem', border: '1px dashed #d1d5db', borderRadius: 12 }}>
+          <Mascot mood="encouraging" size="lg" />
+          <Link
+            href="/writing"
+            style={{ display: 'inline-block', marginTop: '1rem', padding: '0.6rem 1.25rem', background: '#4f46e5', color: '#fff', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}
+          >
+            Start your first session →
+          </Link>
+        </div>
+      )}
+
       {/* Stats strip */}
       <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
         {[
-          { label: 'Day streak', value: stats.streak === 0 ? '—' : `${stats.streak}d`, emoji: '🔥' },
+          { label: 'Day streak', value: stats.streak === 0 ? '—' : `${stats.streak}d`, emoji: stats.streak > 0 ? '🦉⭐' : '🔥' },
           { label: 'Credits', value: String(stats.creditBalance + stats.bonusBalance), emoji: '💳' },
           { label: 'Sessions', value: totalSubmissions === 0 ? '—' : String(totalSubmissions), emoji: '📝' },
         ].map(({ label, value, emoji }) => (

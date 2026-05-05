@@ -1,5 +1,7 @@
 'use client'
 
+import { Mascot } from '@/components/mascot/mascot'
+
 interface Quest {
   questId: string
   title: string
@@ -61,6 +63,11 @@ function QuestCard({ quest }: { quest: Quest }) {
             </span>
             {quest.claimed && <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>✓ Done</span>}
           </div>
+          {quest.claimed && (
+            <div style={{ marginTop: '0.4rem' }}>
+              <Mascot mood="celebrating" size="sm" message="Quest complete! Well done!" />
+            </div>
+          )}
           <p style={{ margin: 0, fontSize: '0.8rem', color: '#6b7280' }}>{quest.description}</p>
 
           <div style={{ marginTop: '0.5rem', background: '#f3f4f6', borderRadius: 999, height: 6, overflow: 'hidden' }}>

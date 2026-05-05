@@ -1,6 +1,6 @@
 {
   "taskId": "fd5p2l",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,16 +22,16 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can disable sound effects",
-            "completed": false
+            "completed": false,
+            "text": "User can disable sound effects"
           },
           {
-            "text": "Sound never plays during Writing or Speaking exam flow",
-            "completed": false
+            "completed": false,
+            "text": "Sound never plays during Writing or Speaking exam flow"
           },
           {
-            "text": "Mascot only appears in purposeful, contextually appropriate moments",
-            "completed": false
+            "completed": false,
+            "text": "Mascot only appears in purposeful, contextually appropriate moments"
           }
         ],
         "description": "Friendly coach mascot with 6-8 emotional states. Appears in onboarding, quest completion, streak reminders, report summaries, and empty states. Optional sound design with silent exam mode.",
@@ -41,6 +41,168 @@
         ],
         "priority": "medium",
         "status": "todo",
+        "title": "Module 10: Mascot and UI delight"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "fd5p2l",
+      "version": 2,
+      "timestamp": "2026-05-05T10:56:32.140572Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can disable sound effects"
+          },
+          {
+            "completed": false,
+            "text": "Sound never plays during Writing or Speaking exam flow"
+          },
+          {
+            "completed": false,
+            "text": "Mascot only appears in purposeful, contextually appropriate moments"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Friendly coach mascot with 6-8 emotional states. Appears in onboarding, quest completion, streak reminders, report summaries, and empty states. Optional sound design with silent exam mode.",
+        "labels": [
+          "ux",
+          "mascot"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 10: Mascot and UI delight"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "fd5p2l",
+      "version": 3,
+      "timestamp": "2026-05-05T11:00:00.125132Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Create `apps/web/src/components/mascot/mascot.tsx` — Mascot component with 8 moods (happy, encouraging, celebrating, worried, neutral, focused, thinking, proud) mapped to emojis + optional caption. Props: mood, size (sm/md/lg), message override.\n2. Create `apps/web/src/hooks/use-sound-preference.ts` — localStorage-backed hook returning { soundEnabled, toggleSound }; isSilentRoute helper that checks pathname against /writing and /speaking.\n3. Create `apps/web/src/components/mascot/sound-toggle.tsx` — small client button that calls toggleSound, hidden on silent routes.\n4. Replace inline emoji in onboarding-wizard.tsx step 1 with `\u003cMascot mood=\"happy\" size=\"lg\" /\u003e`.\n5. Add mascot to dashboard: empty state (0 total submissions → encouraging), streak \u003e 0 → proud badge near streak stat.\n6. Add mascot to QuestPanel: show `\u003cMascot mood=\"celebrating\" /\u003e` inline when any quest is claimed.\n7. Add SoundToggle to dashboard header area (between heading and \"My Reports\" link).\n8. Tests: unit test useSoundPreference (localStorage read/write, isSilentRoute detection)."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can disable sound effects"
+          },
+          {
+            "completed": false,
+            "text": "Sound never plays during Writing or Speaking exam flow"
+          },
+          {
+            "completed": false,
+            "text": "Mascot only appears in purposeful, contextually appropriate moments"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Friendly coach mascot with 6-8 emotional states. Appears in onboarding, quest completion, streak reminders, report summaries, and empty states. Optional sound design with silent exam mode.",
+        "implementationPlan": "1. Create `apps/web/src/components/mascot/mascot.tsx` — Mascot component with 8 moods (happy, encouraging, celebrating, worried, neutral, focused, thinking, proud) mapped to emojis + optional caption. Props: mood, size (sm/md/lg), message override.\n2. Create `apps/web/src/hooks/use-sound-preference.ts` — localStorage-backed hook returning { soundEnabled, toggleSound }; isSilentRoute helper that checks pathname against /writing and /speaking.\n3. Create `apps/web/src/components/mascot/sound-toggle.tsx` — small client button that calls toggleSound, hidden on silent routes.\n4. Replace inline emoji in onboarding-wizard.tsx step 1 with `\u003cMascot mood=\"happy\" size=\"lg\" /\u003e`.\n5. Add mascot to dashboard: empty state (0 total submissions → encouraging), streak \u003e 0 → proud badge near streak stat.\n6. Add mascot to QuestPanel: show `\u003cMascot mood=\"celebrating\" /\u003e` inline when any quest is claimed.\n7. Add SoundToggle to dashboard header area (between heading and \"My Reports\" link).\n8. Tests: unit test useSoundPreference (localStorage read/write, isSilentRoute detection).",
+        "labels": [
+          "ux",
+          "mascot"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 10: Mascot and UI delight"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "fd5p2l",
+      "version": 4,
+      "timestamp": "2026-05-05T11:49:14.412989Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Implemented: Mascot component (8 moods, 3 sizes), useSoundPreference hook with isSilentRoute, SoundToggle client component. Integrated into onboarding step 1, dashboard empty state + streak, QuestPanel claimed state. tsconfig updated to exclude test files. API tests still pass (22)."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "User can disable sound effects"
+          },
+          {
+            "completed": true,
+            "text": "Sound never plays during Writing or Speaking exam flow"
+          },
+          {
+            "completed": true,
+            "text": "Mascot only appears in purposeful, contextually appropriate moments"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Friendly coach mascot with 6-8 emotional states. Appears in onboarding, quest completion, streak reminders, report summaries, and empty states. Optional sound design with silent exam mode.",
+        "implementationNotes": "Implemented: Mascot component (8 moods, 3 sizes), useSoundPreference hook with isSilentRoute, SoundToggle client component. Integrated into onboarding step 1, dashboard empty state + streak, QuestPanel claimed state. tsconfig updated to exclude test files. API tests still pass (22).",
+        "implementationPlan": "1. Create `apps/web/src/components/mascot/mascot.tsx` — Mascot component with 8 moods (happy, encouraging, celebrating, worried, neutral, focused, thinking, proud) mapped to emojis + optional caption. Props: mood, size (sm/md/lg), message override.\n2. Create `apps/web/src/hooks/use-sound-preference.ts` — localStorage-backed hook returning { soundEnabled, toggleSound }; isSilentRoute helper that checks pathname against /writing and /speaking.\n3. Create `apps/web/src/components/mascot/sound-toggle.tsx` — small client button that calls toggleSound, hidden on silent routes.\n4. Replace inline emoji in onboarding-wizard.tsx step 1 with `\u003cMascot mood=\"happy\" size=\"lg\" /\u003e`.\n5. Add mascot to dashboard: empty state (0 total submissions → encouraging), streak \u003e 0 → proud badge near streak stat.\n6. Add mascot to QuestPanel: show `\u003cMascot mood=\"celebrating\" /\u003e` inline when any quest is claimed.\n7. Add SoundToggle to dashboard header area (between heading and \"My Reports\" link).\n8. Tests: unit test useSoundPreference (localStorage read/write, isSilentRoute detection).",
+        "labels": [
+          "ux",
+          "mascot"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 10: Mascot and UI delight"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "fd5p2l",
+      "version": 5,
+      "timestamp": "2026-05-05T11:49:27.449031Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can disable sound effects",
+            "completed": true
+          },
+          {
+            "text": "Sound never plays during Writing or Speaking exam flow",
+            "completed": true
+          },
+          {
+            "text": "Mascot only appears in purposeful, contextually appropriate moments",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Friendly coach mascot with 6-8 emotional states. Appears in onboarding, quest completion, streak reminders, report summaries, and empty states. Optional sound design with silent exam mode.",
+        "implementationNotes": "Implemented: Mascot component (8 moods, 3 sizes), useSoundPreference hook with isSilentRoute, SoundToggle client component. Integrated into onboarding step 1, dashboard empty state + streak, QuestPanel claimed state. tsconfig updated to exclude test files. API tests still pass (22).",
+        "implementationPlan": "1. Create `apps/web/src/components/mascot/mascot.tsx` — Mascot component with 8 moods (happy, encouraging, celebrating, worried, neutral, focused, thinking, proud) mapped to emojis + optional caption. Props: mood, size (sm/md/lg), message override.\n2. Create `apps/web/src/hooks/use-sound-preference.ts` — localStorage-backed hook returning { soundEnabled, toggleSound }; isSilentRoute helper that checks pathname against /writing and /speaking.\n3. Create `apps/web/src/components/mascot/sound-toggle.tsx` — small client button that calls toggleSound, hidden on silent routes.\n4. Replace inline emoji in onboarding-wizard.tsx step 1 with `\u003cMascot mood=\"happy\" size=\"lg\" /\u003e`.\n5. Add mascot to dashboard: empty state (0 total submissions → encouraging), streak \u003e 0 → proud badge near streak stat.\n6. Add mascot to QuestPanel: show `\u003cMascot mood=\"celebrating\" /\u003e` inline when any quest is claimed.\n7. Add SoundToggle to dashboard header area (between heading and \"My Reports\" link).\n8. Tests: unit test useSoundPreference (localStorage read/write, isSilentRoute detection).",
+        "labels": [
+          "ux",
+          "mascot"
+        ],
+        "priority": "medium",
+        "status": "done",
         "title": "Module 10: Mascot and UI delight"
       }
     }

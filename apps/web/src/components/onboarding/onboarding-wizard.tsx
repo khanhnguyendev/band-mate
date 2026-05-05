@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Mascot } from '@/components/mascot/mascot'
 
 type Skill = 'writing' | 'speaking' | 'reading' | 'listening'
 
@@ -55,12 +56,11 @@ export function OnboardingWizard() {
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', padding: '2rem' }}>
-      {/* Mascot greeting — step 1 only */}
       {step === 1 && (
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <div style={{ fontSize: '4rem' }}>🦉</div>
-          <h2 style={{ margin: '0.5rem 0' }}>Hi! I'm Bandy, your IELTS coach.</h2>
-          <p style={{ color: '#666' }}>Let's set up your study plan in under 3 minutes.</p>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <Mascot mood="happy" size="lg" showMessage={false} />
+          <h2 style={{ margin: '0.5rem 0', textAlign: 'center' }}>Hi! I'm Bandy, your IELTS coach.</h2>
+          <p style={{ color: '#666', textAlign: 'center' }}>Let's set up your study plan in under 3 minutes.</p>
         </div>
       )}
 
