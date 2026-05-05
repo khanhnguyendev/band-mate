@@ -54,8 +54,8 @@ All required variables are listed in `.env.example`. Key ones:
 
 | Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | Yes | Supabase direct connection string — used by Prisma migrations |
-| `DATABASE_URL_POOLER` | Yes | Supabase PgBouncer URL — used by API at runtime (`?pgbouncer=true`) |
+| `DATABASE_URL` | Yes | Supabase pooler connection string — used by API at runtime (`?pgbouncer=true`) |
+| `DIRECT_URL` | Yes | Supabase direct connection string — used by Prisma for schema introspection |
 
 ### Redis (Upstash)
 
@@ -131,19 +131,21 @@ Vercel and Railway both run `pnpm build` automatically on deploy via their detec
 
 ---
 
-## Database Migrations
+## Database Schema
 
 ```bash
-# Run pending migrations against Supabase (use direct URL, not pooler)
-DATABASE_URL=$DATABASE_URL pnpm --filter api db:migrate:deploy
+# Push Prisma schema to Supabase (dev — requires supabase link first)
+pnpm db:push
 
-# Generate a new migration after schema change (development only)
-pnpm --filter api db:migrate:dev
+# Apply Prisma migrations in CI / production (uses direct connection)
+pnpm --filter api db:migrate:deploy
 ```
 
-Migrations are applied automatically in CI before each staging deploy.
+Schema is pushed via the Supabase CLI (`supabase db push`), which connects through
+the Supabase API rather than a direct TCP connection on port 5432.
 
-> Use the **direct** `DATABASE_URL` (not the pooler URL) for Prisma `migrate deploy` — PgBouncer does not support the advisory locks Prisma uses during migrations.
+> Use `DIRECT_URL` (not `DATABASE_URL` pooler) for `prisma migrate deploy` in CI —
+> PgBouncer does not support the advisory locks Prisma uses during migrations.
 
 ---
 
@@ -203,13 +205,12 @@ Use the Vercel dashboard → Deployments → select a previous deployment → **
 Use the Railway dashboard → Deployments → select a previous deployment → **Rollback**.
 
 ### Database
-Migrations should be forward-only. If a migration must be reverted:
+Schema changes via `supabase db push` are applied directly to the current schema state — there are no migration files to revert. To roll back:
 
-```bash
-pnpm --filter api db:migrate:revert
-```
+1. Take a Supabase database backup (Dashboard → Database → Backups) **before** any schema push.
+2. Restore from backup via the Supabase dashboard if needed, or write a compensating schema change and push again.
 
-This is a manual step — always take a Supabase database backup (Dashboard → Database → Backups) before a production migration.
+This is a manual step — always back up before pushing schema changes to production.
 
 ---
 
@@ -227,10 +228,10 @@ This is a manual step — always take a Supabase database backup (Dashboard → 
 2. Confirm the `refund` job ran — look for a ledger entry of type `refund`.
 3. If missing, manually trigger a refund via the admin console.
 
-### Database migration fails on deploy
-1. Ensure `DATABASE_URL` is the **direct** Supabase connection, not the PgBouncer pooler URL.
+### Database push fails on deploy
+1. Ensure `DIRECT_URL` is the **direct** Supabase connection, not the PgBouncer pooler URL.
 2. Check for long-running queries in Supabase Dashboard → Database → Query Performance.
-3. Supabase free tier pauses inactive projects after 7 days — resume the project in the dashboard before running migrations.
+3. Supabase free tier pauses inactive projects after 7 days — resume the project in the dashboard before running `pnpm db:push`.
 
 ### Audio upload fails
 1. Check Supabase Storage bucket CORS policy — must allow PUT from the web app origin (Vercel URL).

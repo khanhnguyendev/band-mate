@@ -62,10 +62,11 @@ pnpm install
 
 # 3. Set up environment
 cp .env.example .env
-# Fill in DATABASE_URL, REDIS_URL, and AI_API_KEY at minimum
+# Fill in DATABASE_URL (pooler), DIRECT_URL (direct), REDIS_URL, and AI_API_KEY at minimum
 
-# 4. Run database migrations
-pnpm --filter api db:migrate:dev
+# 4. Link and push the database schema
+supabase link --project-ref <your-project-ref>
+pnpm db:push
 
 # 5. Start development servers
 pnpm dev

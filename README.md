@@ -34,8 +34,9 @@ pnpm install
 cp .env.example .env
 # Edit .env with your API keys, DB URL, Redis URL, object storage credentials
 
-# 4. Set up the database
-pnpm db:migrate
+# 4. Link Supabase project and push schema
+supabase link --project-ref <your-project-ref>
+pnpm db:push
 
 # 5. Start development servers
 pnpm dev
