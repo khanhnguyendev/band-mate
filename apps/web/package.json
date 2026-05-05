@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "echo 'No tests in web yet' && exit 0"
   },
   "dependencies": {
     "@band-mate/shared": "workspace:*",
