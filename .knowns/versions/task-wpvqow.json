@@ -1,6 +1,6 @@
 {
   "taskId": "wpvqow",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,16 +22,16 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "User can control notification preferences",
-            "completed": false
+            "completed": false,
+            "text": "User can control notification preferences"
           },
           {
-            "text": "Time-sensitive reminders respect the user's timezone",
-            "completed": false
+            "completed": false,
+            "text": "Time-sensitive reminders respect the user's timezone"
           },
           {
-            "text": "Report-ready notification is sent when a scoring job completes",
-            "completed": false
+            "completed": false,
+            "text": "Report-ready notification is sent when a scoring job completes"
           }
         ],
         "description": "Email and in-app reminders for streak breaks and unfinished tasks. Report-ready notifications. Mascot-toned copy. User-controllable preferences with timezone support.",
@@ -40,6 +40,164 @@
         ],
         "priority": "medium",
         "status": "todo",
+        "title": "Module 12: Notifications"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "wpvqow",
+      "version": 2,
+      "timestamp": "2026-05-05T13:45:26.392584Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can control notification preferences"
+          },
+          {
+            "completed": false,
+            "text": "Time-sensitive reminders respect the user's timezone"
+          },
+          {
+            "completed": false,
+            "text": "Report-ready notification is sent when a scoring job completes"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Email and in-app reminders for streak breaks and unfinished tasks. Report-ready notifications. Mascot-toned copy. User-controllable preferences with timezone support.",
+        "labels": [
+          "notifications"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 12: Notifications"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "wpvqow",
+      "version": 3,
+      "timestamp": "2026-05-05T13:49:49.38174Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. Install resend + add env vars\n2. Schema: NotificationPreference model + migration\n3. NotificationService wrapping Resend\n4. NotificationModule\n5. Preferences GET/PATCH endpoints\n6. Wire report-ready into score workers\n7. Streak reminder BullMQ repeatable job\n8. Tests for NotificationService"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "User can control notification preferences"
+          },
+          {
+            "completed": false,
+            "text": "Time-sensitive reminders respect the user's timezone"
+          },
+          {
+            "completed": false,
+            "text": "Report-ready notification is sent when a scoring job completes"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Email and in-app reminders for streak breaks and unfinished tasks. Report-ready notifications. Mascot-toned copy. User-controllable preferences with timezone support.",
+        "implementationPlan": "1. Install resend + add env vars\n2. Schema: NotificationPreference model + migration\n3. NotificationService wrapping Resend\n4. NotificationModule\n5. Preferences GET/PATCH endpoints\n6. Wire report-ready into score workers\n7. Streak reminder BullMQ repeatable job\n8. Tests for NotificationService",
+        "labels": [
+          "notifications"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 12: Notifications"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "wpvqow",
+      "version": 4,
+      "timestamp": "2026-05-05T13:54:47.779726Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Implemented: NotificationService (Resend, report-ready + streak-reminder emails, mascot-toned copy, no-key suppression), NotificationModule, GET/PATCH /v1/users/me/notifications preferences, NotificationPreference schema model, report-ready hook in score-writing + score-speaking workers, hourly streak-reminder BullMQ repeatable job with timezone offset check. 81 API tests passing (8 new notification tests)."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "User can control notification preferences"
+          },
+          {
+            "completed": true,
+            "text": "Time-sensitive reminders respect the user's timezone"
+          },
+          {
+            "completed": true,
+            "text": "Report-ready notification is sent when a scoring job completes"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Email and in-app reminders for streak breaks and unfinished tasks. Report-ready notifications. Mascot-toned copy. User-controllable preferences with timezone support.",
+        "implementationNotes": "Implemented: NotificationService (Resend, report-ready + streak-reminder emails, mascot-toned copy, no-key suppression), NotificationModule, GET/PATCH /v1/users/me/notifications preferences, NotificationPreference schema model, report-ready hook in score-writing + score-speaking workers, hourly streak-reminder BullMQ repeatable job with timezone offset check. 81 API tests passing (8 new notification tests).",
+        "implementationPlan": "1. Install resend + add env vars\n2. Schema: NotificationPreference model + migration\n3. NotificationService wrapping Resend\n4. NotificationModule\n5. Preferences GET/PATCH endpoints\n6. Wire report-ready into score workers\n7. Streak reminder BullMQ repeatable job\n8. Tests for NotificationService",
+        "labels": [
+          "notifications"
+        ],
+        "priority": "medium",
+        "status": "in-progress",
+        "title": "Module 12: Notifications"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "wpvqow",
+      "version": 5,
+      "timestamp": "2026-05-05T13:54:58.777534Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "User can control notification preferences",
+            "completed": true
+          },
+          {
+            "text": "Time-sensitive reminders respect the user's timezone",
+            "completed": true
+          },
+          {
+            "text": "Report-ready notification is sent when a scoring job completes",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Email and in-app reminders for streak breaks and unfinished tasks. Report-ready notifications. Mascot-toned copy. User-controllable preferences with timezone support.",
+        "implementationNotes": "Implemented: NotificationService (Resend, report-ready + streak-reminder emails, mascot-toned copy, no-key suppression), NotificationModule, GET/PATCH /v1/users/me/notifications preferences, NotificationPreference schema model, report-ready hook in score-writing + score-speaking workers, hourly streak-reminder BullMQ repeatable job with timezone offset check. 81 API tests passing (8 new notification tests).",
+        "implementationPlan": "1. Install resend + add env vars\n2. Schema: NotificationPreference model + migration\n3. NotificationService wrapping Resend\n4. NotificationModule\n5. Preferences GET/PATCH endpoints\n6. Wire report-ready into score workers\n7. Streak reminder BullMQ repeatable job\n8. Tests for NotificationService",
+        "labels": [
+          "notifications"
+        ],
+        "priority": "medium",
+        "status": "done",
         "title": "Module 12: Notifications"
       }
     }

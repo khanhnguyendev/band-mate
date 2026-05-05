@@ -17,6 +17,7 @@ import { ListeningModule } from './listening/listening.module'
 import { ReadingModule } from './reading/reading.module'
 import { TranscriptionModule } from './transcription/transcription.module'
 import { WorkersModule } from './workers/workers.module'
+import { NotificationModule } from './notification/notification.module'
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { WorkersModule } from './workers/workers.module'
     ListeningModule,
     TranscriptionModule,
     WorkersModule,
+    NotificationModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

@@ -84,11 +84,12 @@ model User {
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
 
-  wallet          Wallet?
-  subscription    Subscription?
-  submissions     Submission[]
-  scoreReports    ScoreReport[]
-  improvementTasks ImprovementTask[]
+  wallet                  Wallet?
+  subscription            Subscription?
+  submissions             Submission[]
+  scoreReports            ScoreReport[]
+  improvementTasks        ImprovementTask[]
+  notificationPreference  NotificationPreference?
 
   @@map("users")
 }
@@ -315,4 +316,19 @@ model GameConfig {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("game_config")
+}
+
+model NotificationPreference {
+  id                  String   @id @default(uuid())
+  userId              String   @unique @map("user_id")
+  timezone            String   @default("UTC")
+  emailReportReady    Boolean  @default(true) @map("email_report_ready")
+  emailStreakReminder Boolean  @default(true) @map("email_streak_reminder")
+  reminderHour        Int      @default(20) @map("reminder_hour")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notification_preferences")
 }

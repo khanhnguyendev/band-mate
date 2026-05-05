@@ -4,6 +4,7 @@ import { Job } from 'bullmq'
 import { PrismaService } from '../prisma/prisma.service'
 import { AnthropicService } from '../anthropic/anthropic.service'
 import { WalletService } from '../wallet/wallet.service'
+import { NotificationService } from '../notification/notification.service'
 import { SCORE_WRITING_QUEUE } from '../submissions/submissions.service'
 
 interface ScoringJobData {
@@ -36,6 +37,7 @@ export class ScoreWritingWorker extends WorkerHost {
     private prisma: PrismaService,
     private anthropic: AnthropicService,
     private wallet: WalletService,
+    private notification: NotificationService,
   ) {
     super()
   }
@@ -127,6 +129,11 @@ export class ScoreWritingWorker extends WorkerHost {
     }
 
     this.logger.log(`Scored submission ${submissionId} — band ${overallBand}`)
+
+    const report = await this.prisma.scoreReport.findUnique({ where: { submissionId } })
+    if (report) {
+      this.notification.sendReportReady(submission.userId, report.id, 'writing', overallBand).catch(() => {})
+    }
   }
 
   @OnWorkerEvent('failed')

@@ -34,6 +34,18 @@ export class UsersController {
     return this.toResponse(user)
   }
 
+  @Get('me/notifications')
+  async getNotifications(@CurrentUser() supabaseUser: SupabaseUser) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.users.getNotificationPrefs(appUser.id)
+  }
+
+  @Patch('me/notifications')
+  async updateNotifications(@CurrentUser() supabaseUser: SupabaseUser, @Body() body: unknown) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.users.updateNotificationPrefs(appUser.id, body as any)
+  }
+
   @Post('admin/monthly-grant')
   async monthlyGrant(@CurrentUser() supabaseUser: SupabaseUser) {
     const appUser = await this.users.findOrCreate(supabaseUser)

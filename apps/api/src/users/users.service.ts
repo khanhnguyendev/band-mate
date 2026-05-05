@@ -231,4 +231,28 @@ export class UsersService {
       include: { wallet: true },
     })
   }
+
+  async getNotificationPrefs(userId: string) {
+    const prefs = await this.prisma.notificationPreference.findUnique({ where: { userId } })
+    return prefs ?? {
+      userId,
+      timezone: 'UTC',
+      emailReportReady: true,
+      emailStreakReminder: true,
+      reminderHour: 20,
+    }
+  }
+
+  async updateNotificationPrefs(userId: string, dto: {
+    timezone?: string
+    emailReportReady?: boolean
+    emailStreakReminder?: boolean
+    reminderHour?: number
+  }) {
+    return this.prisma.notificationPreference.upsert({
+      where: { userId },
+      create: { userId, ...dto },
+      update: dto,
+    })
+  }
 }
