@@ -7,7 +7,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
-    "db:migrate": "pnpm --filter @band-mate/api db:migrate:dev",
+    "db:push": "supabase db push && pnpm --filter @band-mate/api db:generate",
     "db:migrate:deploy": "pnpm --filter @band-mate/api db:migrate:deploy",
     "db:generate": "pnpm --filter @band-mate/api db:generate",
     "db:seed": "pnpm --filter @band-mate/api db:seed"
