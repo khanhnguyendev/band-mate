@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common'
+import { Body, Controller, ForbiddenException, Get, Patch, Post } from '@nestjs/common'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { OnboardingSchema } from '@band-mate/shared'
 import { CurrentUser } from '../common/decorators/current-user.decorator'
@@ -20,12 +20,25 @@ export class UsersController {
     return this.users.getStats(appUser.id)
   }
 
+  @Get('me/wallet')
+  async wallet(@CurrentUser() supabaseUser: SupabaseUser) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    return this.users.getWallet(appUser.id)
+  }
+
   @Patch('onboarding')
   async onboarding(@CurrentUser() supabaseUser: SupabaseUser, @Body() body: unknown) {
     const dto = OnboardingSchema.parse(body)
     const appUser = await this.users.findOrCreate(supabaseUser)
     const user = await this.users.completeOnboarding(appUser.id, dto)
     return this.toResponse(user)
+  }
+
+  @Post('admin/monthly-grant')
+  async monthlyGrant(@CurrentUser() supabaseUser: SupabaseUser) {
+    const appUser = await this.users.findOrCreate(supabaseUser)
+    if (appUser.role !== 'admin') throw new ForbiddenException('Admin only')
+    return this.users.grantMonthlyCredits()
   }
 
   private toResponse(user: Awaited<ReturnType<UsersService['findOrCreate']>>) {

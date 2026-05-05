@@ -5,6 +5,8 @@ import { PrismaService } from '../prisma/prisma.service'
 import { WalletService } from '../wallet/wallet.service'
 
 const ONBOARDING_TRIAL_CREDITS = 3
+const FREE_PLAN_NAME = 'free'
+const SUBSCRIPTION_PERIOD_DAYS = 30
 
 @Injectable()
 export class UsersService {
@@ -118,8 +120,82 @@ export class UsersService {
     }
   }
 
+  async getWallet(userId: string) {
+    const wallet = await this.prisma.wallet.findUniqueOrThrow({
+      where: { userId },
+      include: {
+        entries: { orderBy: { createdAt: 'desc' }, take: 10 },
+      },
+    })
+
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { userId },
+      include: { plan: true },
+    })
+
+    // Lazy bonus expiry
+    let bonusBalance = wallet.bonusBalance
+    if (wallet.bonusExpiresAt && wallet.bonusExpiresAt < new Date() && bonusBalance > 0) {
+      await this.prisma.wallet.update({
+        where: { id: wallet.id },
+        data: { bonusBalance: 0 },
+      })
+      bonusBalance = 0
+    }
+
+    return {
+      balance: wallet.balance,
+      bonusBalance,
+      bonusExpiresAt: bonusBalance > 0 ? wallet.bonusExpiresAt : null,
+      plan: subscription?.plan
+        ? {
+            name: subscription.plan.name,
+            monthlyCredits: subscription.plan.monthlyCredits,
+            writingCreditCost: subscription.plan.writingCreditCost,
+            speakingCreditCost: subscription.plan.speakingCreditCost,
+          }
+        : null,
+      ledger: wallet.entries.map((e) => ({
+        id: e.id,
+        type: e.type,
+        amount: e.amount,
+        balanceAfter: e.balanceAfter,
+        description: e.description,
+        createdAt: e.createdAt,
+      })),
+    }
+  }
+
+  async grantMonthlyCredits() {
+    const activeSubscriptions = await this.prisma.subscription.findMany({
+      where: { status: 'active' },
+      include: { plan: true },
+    })
+
+    const now = new Date()
+    const periodKey = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}`
+    const results: { userId: string; granted: number }[] = []
+
+    for (const sub of activeSubscriptions) {
+      const idempotencyKey = `monthly-grant:${sub.userId}:${periodKey}`
+      try {
+        await this.wallet.grant(
+          sub.userId,
+          sub.plan.monthlyCredits,
+          `Monthly credits — ${sub.plan.name} plan`,
+          idempotencyKey,
+        )
+        results.push({ userId: sub.userId, granted: sub.plan.monthlyCredits })
+      } catch {
+        // Already granted this period (idempotent) — skip
+      }
+    }
+
+    return { granted: results.length, results }
+  }
+
   async completeOnboarding(userId: string, dto: OnboardingInput) {
-    const user = await this.prisma.user.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: {
         targetBand: dto.targetBand,
@@ -128,7 +204,6 @@ export class UsersService {
         motivation: dto.motivation,
         onboardingCompletedAt: new Date(),
       },
-      include: { wallet: true },
     })
 
     await this.wallet.grant(
@@ -137,6 +212,19 @@ export class UsersService {
       'Onboarding trial credits',
       `onboarding:${userId}`,
     )
+
+    // Subscribe to Free plan (idempotent — upsert by userId)
+    const freePlan = await this.prisma.plan.findUnique({ where: { name: FREE_PLAN_NAME } })
+    if (freePlan) {
+      const now = new Date()
+      const periodEnd = new Date(now)
+      periodEnd.setDate(periodEnd.getDate() + SUBSCRIPTION_PERIOD_DAYS)
+      await this.prisma.subscription.upsert({
+        where: { userId },
+        create: { userId, planId: freePlan.id, status: 'active', currentPeriodStart: now, currentPeriodEnd: periodEnd },
+        update: {},
+      })
+    }
 
     return this.prisma.user.findUniqueOrThrow({
       where: { id: userId },

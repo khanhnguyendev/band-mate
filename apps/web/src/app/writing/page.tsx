@@ -1,4 +1,6 @@
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/utils/supabase/server'
 
 interface QuestionSet {
   id: string
@@ -7,6 +9,12 @@ interface QuestionSet {
   difficulty: string
   estimatedMinutes: number
   questions: { id: string; prompt: string }[]
+}
+
+interface WalletInfo {
+  balance: number
+  bonusBalance: number
+  plan: { writingCreditCost: number; name: string } | null
 }
 
 const DIFFICULTY_LABEL: Record<string, string> = {
@@ -22,31 +30,61 @@ const TASK_LABEL: Record<string, string> = {
 }
 
 export default async function WritingPage() {
-  const res = await fetch(`${process.env.API_URL}/v1/questions/writing`, {
-    cache: 'no-store',
-  })
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
-  const sets: QuestionSet[] = res.ok ? await res.json() : []
+  const session = (await supabase.auth.getSession()).data.session
+  const token = session?.access_token
+  const apiUrl = process.env.API_URL ?? ''
+
+  const [setsRes, walletRes] = await Promise.all([
+    fetch(`${apiUrl}/v1/questions/writing`, { cache: 'no-store' }),
+    fetch(`${apiUrl}/v1/users/me/wallet`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    }),
+  ])
+
+  const sets: QuestionSet[] = setsRes.ok ? await setsRes.json() : []
+  const wallet: WalletInfo | null = walletRes.ok ? await walletRes.json() : null
+
+  const creditCost = wallet?.plan?.writingCreditCost ?? 2
+  const totalBalance = (wallet?.balance ?? 0) + (wallet?.bonusBalance ?? 0)
+  const canAfford = totalBalance >= creditCost
 
   return (
     <main style={{ maxWidth: 800, margin: '0 auto', padding: '2rem' }}>
       <Link href="/dashboard" style={{ color: '#6366f1', fontSize: '0.9rem' }}>← Dashboard</Link>
-      <h1 style={{ marginTop: '0.5rem' }}>Writing Practice</h1>
-      <p style={{ color: '#666' }}>Select a task to practise. Each submission costs 2 credits.</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '0.5rem' }}>
+        <h1 style={{ margin: 0 }}>Writing Practice</h1>
+        <Link href="/wallet" style={{ fontSize: '0.85rem', color: '#6b7280' }}>
+          💳 {totalBalance} credit{totalBalance !== 1 ? 's' : ''}
+        </Link>
+      </div>
+      <p style={{ color: '#666', marginTop: '0.25rem' }}>
+        Select a task to practise. Each submission costs {creditCost} credit{creditCost !== 1 ? 's' : ''}.
+      </p>
+
+      {!canAfford && (
+        <div style={{ marginTop: '1rem', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10, padding: '0.75rem 1rem', fontSize: '0.9rem', color: '#b91c1c' }}>
+          Insufficient credits.{' '}
+          <Link href="/wallet" style={{ color: '#b91c1c', fontWeight: 600 }}>Top up →</Link>
+        </div>
+      )}
 
       <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
         {sets.map((set) => (
           <Link
             key={set.id}
-            href={`/writing/${set.questions[0]?.id}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
+            href={canAfford ? `/writing/${set.questions[0]?.id}` : '/wallet'}
+            style={{ textDecoration: 'none', color: 'inherit', opacity: canAfford ? 1 : 0.6 }}
           >
             <div style={{
               border: '1px solid #e5e7eb',
               borderRadius: 12,
               padding: '1.25rem 1.5rem',
               cursor: 'pointer',
-              transition: 'border-color 0.15s',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
@@ -70,7 +108,9 @@ export default async function WritingPage() {
                   <div style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '0.25rem' }}>
                     ~{set.estimatedMinutes} min
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#6366f1', marginTop: '0.25rem' }}>2 credits</div>
+                  <div style={{ fontSize: '0.8rem', color: '#6366f1', marginTop: '0.25rem', fontWeight: 600 }}>
+                    {creditCost} credit{creditCost !== 1 ? 's' : ''}
+                  </div>
                 </div>
               </div>
             </div>

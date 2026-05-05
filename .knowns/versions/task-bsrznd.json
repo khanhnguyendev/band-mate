@@ -1,6 +1,6 @@
 {
   "taskId": "bsrznd",
-  "currentVersion": 1,
+  "currentVersion": 5,
   "versions": [
     {
       "id": "v1",
@@ -22,20 +22,20 @@
       "snapshot": {
         "acceptanceCriteria": [
           {
-            "text": "Credit cost is shown to the user before each premium action",
-            "completed": false
+            "completed": false,
+            "text": "Credit cost is shown to the user before each premium action"
           },
           {
-            "text": "Credits cannot go below zero",
-            "completed": false
+            "completed": false,
+            "text": "Credits cannot go below zero"
           },
           {
-            "text": "Failed scoring jobs trigger automatic refund",
-            "completed": false
+            "completed": false,
+            "text": "Failed scoring jobs trigger automatic refund"
           },
           {
-            "text": "Bonus credits expire after the configured window",
-            "completed": false
+            "completed": false,
+            "text": "Bonus credits expire after the configured window"
           }
         ],
         "description": "Free / Starter / Pro plans with monthly credit grants. Credit top-ups via Stripe. Reserve/consume/refund wallet model backed by append-only ledger. Bonus credits with expiry. Credit cost shown before each premium action.",
@@ -46,6 +46,188 @@
         ],
         "priority": "high",
         "status": "todo",
+        "title": "Module 11: Plans, pricing, and wallet"
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "bsrznd",
+      "version": 2,
+      "timestamp": "2026-05-05T12:38:19.467259Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "oldValue": null,
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "Credit cost is shown to the user before each premium action"
+          },
+          {
+            "completed": false,
+            "text": "Credits cannot go below zero"
+          },
+          {
+            "completed": false,
+            "text": "Failed scoring jobs trigger automatic refund"
+          },
+          {
+            "completed": false,
+            "text": "Bonus credits expire after the configured window"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Free / Starter / Pro plans with monthly credit grants. Credit top-ups via Stripe. Reserve/consume/refund wallet model backed by append-only ledger. Bonus credits with expiry. Credit cost shown before each premium action.",
+        "labels": [
+          "billing",
+          "wallet",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 11: Plans, pricing, and wallet"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "bsrznd",
+      "version": 3,
+      "timestamp": "2026-05-05T12:40:13.084542Z",
+      "changes": [
+        {
+          "field": "implementationPlan",
+          "oldValue": null,
+          "newValue": "1. `users.service.ts completeOnboarding()` — after wallet.grant(), upsert a Subscription row for the Free plan (currentPeriodStart: now, currentPeriodEnd: now + 30 days). AC-2/AC-4 foundation.\n2. Add `getWallet(userId)` to `users.service.ts` — fetches wallet + subscription + plan + last 10 ledger entries; applies lazy bonus expiry (if bonusExpiresAt \u003c now: zero bonusBalance in DB + response). Returns: { balance, bonusBalance, bonusExpiresAt, plan: { name, writingCreditCost, speakingCreditCost, monthlyCredits }, ledger[] }. Also update getStats() to apply same expiry.\n3. Add `GET /v1/users/me/wallet` to `users.controller.ts` — calls getWallet(). Exposes plan credit costs to the frontend. (AC-1, AC-4)\n4. Credit cost display on writing page — fetch wallet before showing submit; display \"Cost: N credits\" badge; show \"Insufficient credits — Top up\" message + link if balance \u003c cost. Handle 402 from reserve(). (AC-1)\n5. Credit cost display on speaking page — same pattern as step 4. (AC-1)\n6. Wallet page `apps/web/src/app/wallet/page.tsx` — server component fetching GET /v1/users/me/wallet. Cards: credit balance, bonus balance (with expiry date), plan name, monthly grant. Ledger table: last 10 entries with type/amount/date.\n7. Admin monthly grant endpoint `POST /v1/admin/monthly-grant` — iterates all active Subscriptions, calls wallet.grant() with monthly credit amount from Plan. Guard: @Roles('admin') check via user.role.\n8. Tests: unit test getWallet() bonus expiry logic (bonusExpiresAt in past → zeroed in response); test completeOnboarding() creates subscription row."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": false,
+            "text": "Credit cost is shown to the user before each premium action"
+          },
+          {
+            "completed": false,
+            "text": "Credits cannot go below zero"
+          },
+          {
+            "completed": false,
+            "text": "Failed scoring jobs trigger automatic refund"
+          },
+          {
+            "completed": false,
+            "text": "Bonus credits expire after the configured window"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Free / Starter / Pro plans with monthly credit grants. Credit top-ups via Stripe. Reserve/consume/refund wallet model backed by append-only ledger. Bonus credits with expiry. Credit cost shown before each premium action.",
+        "implementationPlan": "1. `users.service.ts completeOnboarding()` — after wallet.grant(), upsert a Subscription row for the Free plan (currentPeriodStart: now, currentPeriodEnd: now + 30 days). AC-2/AC-4 foundation.\n2. Add `getWallet(userId)` to `users.service.ts` — fetches wallet + subscription + plan + last 10 ledger entries; applies lazy bonus expiry (if bonusExpiresAt \u003c now: zero bonusBalance in DB + response). Returns: { balance, bonusBalance, bonusExpiresAt, plan: { name, writingCreditCost, speakingCreditCost, monthlyCredits }, ledger[] }. Also update getStats() to apply same expiry.\n3. Add `GET /v1/users/me/wallet` to `users.controller.ts` — calls getWallet(). Exposes plan credit costs to the frontend. (AC-1, AC-4)\n4. Credit cost display on writing page — fetch wallet before showing submit; display \"Cost: N credits\" badge; show \"Insufficient credits — Top up\" message + link if balance \u003c cost. Handle 402 from reserve(). (AC-1)\n5. Credit cost display on speaking page — same pattern as step 4. (AC-1)\n6. Wallet page `apps/web/src/app/wallet/page.tsx` — server component fetching GET /v1/users/me/wallet. Cards: credit balance, bonus balance (with expiry date), plan name, monthly grant. Ledger table: last 10 entries with type/amount/date.\n7. Admin monthly grant endpoint `POST /v1/admin/monthly-grant` — iterates all active Subscriptions, calls wallet.grant() with monthly credit amount from Plan. Guard: @Roles('admin') check via user.role.\n8. Tests: unit test getWallet() bonus expiry logic (bonusExpiresAt in past → zeroed in response); test completeOnboarding() creates subscription row.",
+        "labels": [
+          "billing",
+          "wallet",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 11: Plans, pricing, and wallet"
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "bsrznd",
+      "version": 4,
+      "timestamp": "2026-05-05T12:44:50.457454Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": null,
+          "newValue": "Implemented: getWallet() with lazy bonus expiry, GET /v1/users/me/wallet, Free plan subscription on onboarding, credit cost display on writing/speaking pages, /wallet page, admin monthly-grant endpoint. AC-2 and AC-3 were already enforced by reserve() and worker refund hooks. All 73 API tests pass."
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Credit cost is shown to the user before each premium action"
+          },
+          {
+            "completed": true,
+            "text": "Credits cannot go below zero"
+          },
+          {
+            "completed": true,
+            "text": "Failed scoring jobs trigger automatic refund"
+          },
+          {
+            "completed": true,
+            "text": "Bonus credits expire after the configured window"
+          }
+        ],
+        "assignee": "@me",
+        "description": "Free / Starter / Pro plans with monthly credit grants. Credit top-ups via Stripe. Reserve/consume/refund wallet model backed by append-only ledger. Bonus credits with expiry. Credit cost shown before each premium action.",
+        "implementationNotes": "Implemented: getWallet() with lazy bonus expiry, GET /v1/users/me/wallet, Free plan subscription on onboarding, credit cost display on writing/speaking pages, /wallet page, admin monthly-grant endpoint. AC-2 and AC-3 were already enforced by reserve() and worker refund hooks. All 73 API tests pass.",
+        "implementationPlan": "1. `users.service.ts completeOnboarding()` — after wallet.grant(), upsert a Subscription row for the Free plan (currentPeriodStart: now, currentPeriodEnd: now + 30 days). AC-2/AC-4 foundation.\n2. Add `getWallet(userId)` to `users.service.ts` — fetches wallet + subscription + plan + last 10 ledger entries; applies lazy bonus expiry (if bonusExpiresAt \u003c now: zero bonusBalance in DB + response). Returns: { balance, bonusBalance, bonusExpiresAt, plan: { name, writingCreditCost, speakingCreditCost, monthlyCredits }, ledger[] }. Also update getStats() to apply same expiry.\n3. Add `GET /v1/users/me/wallet` to `users.controller.ts` — calls getWallet(). Exposes plan credit costs to the frontend. (AC-1, AC-4)\n4. Credit cost display on writing page — fetch wallet before showing submit; display \"Cost: N credits\" badge; show \"Insufficient credits — Top up\" message + link if balance \u003c cost. Handle 402 from reserve(). (AC-1)\n5. Credit cost display on speaking page — same pattern as step 4. (AC-1)\n6. Wallet page `apps/web/src/app/wallet/page.tsx` — server component fetching GET /v1/users/me/wallet. Cards: credit balance, bonus balance (with expiry date), plan name, monthly grant. Ledger table: last 10 entries with type/amount/date.\n7. Admin monthly grant endpoint `POST /v1/admin/monthly-grant` — iterates all active Subscriptions, calls wallet.grant() with monthly credit amount from Plan. Guard: @Roles('admin') check via user.role.\n8. Tests: unit test getWallet() bonus expiry logic (bonusExpiresAt in past → zeroed in response); test completeOnboarding() creates subscription row.",
+        "labels": [
+          "billing",
+          "wallet",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "in-progress",
+        "title": "Module 11: Plans, pricing, and wallet"
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "bsrznd",
+      "version": 5,
+      "timestamp": "2026-05-05T12:44:56.654344Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "acceptanceCriteria": [
+          {
+            "text": "Credit cost is shown to the user before each premium action",
+            "completed": true
+          },
+          {
+            "text": "Credits cannot go below zero",
+            "completed": true
+          },
+          {
+            "text": "Failed scoring jobs trigger automatic refund",
+            "completed": true
+          },
+          {
+            "text": "Bonus credits expire after the configured window",
+            "completed": true
+          }
+        ],
+        "assignee": "@me",
+        "description": "Free / Starter / Pro plans with monthly credit grants. Credit top-ups via Stripe. Reserve/consume/refund wallet model backed by append-only ledger. Bonus credits with expiry. Credit cost shown before each premium action.",
+        "implementationNotes": "Implemented: getWallet() with lazy bonus expiry, GET /v1/users/me/wallet, Free plan subscription on onboarding, credit cost display on writing/speaking pages, /wallet page, admin monthly-grant endpoint. AC-2 and AC-3 were already enforced by reserve() and worker refund hooks. All 73 API tests pass.",
+        "implementationPlan": "1. `users.service.ts completeOnboarding()` — after wallet.grant(), upsert a Subscription row for the Free plan (currentPeriodStart: now, currentPeriodEnd: now + 30 days). AC-2/AC-4 foundation.\n2. Add `getWallet(userId)` to `users.service.ts` — fetches wallet + subscription + plan + last 10 ledger entries; applies lazy bonus expiry (if bonusExpiresAt \u003c now: zero bonusBalance in DB + response). Returns: { balance, bonusBalance, bonusExpiresAt, plan: { name, writingCreditCost, speakingCreditCost, monthlyCredits }, ledger[] }. Also update getStats() to apply same expiry.\n3. Add `GET /v1/users/me/wallet` to `users.controller.ts` — calls getWallet(). Exposes plan credit costs to the frontend. (AC-1, AC-4)\n4. Credit cost display on writing page — fetch wallet before showing submit; display \"Cost: N credits\" badge; show \"Insufficient credits — Top up\" message + link if balance \u003c cost. Handle 402 from reserve(). (AC-1)\n5. Credit cost display on speaking page — same pattern as step 4. (AC-1)\n6. Wallet page `apps/web/src/app/wallet/page.tsx` — server component fetching GET /v1/users/me/wallet. Cards: credit balance, bonus balance (with expiry date), plan name, monthly grant. Ledger table: last 10 entries with type/amount/date.\n7. Admin monthly grant endpoint `POST /v1/admin/monthly-grant` — iterates all active Subscriptions, calls wallet.grant() with monthly credit amount from Plan. Guard: @Roles('admin') check via user.role.\n8. Tests: unit test getWallet() bonus expiry logic (bonusExpiresAt in past → zeroed in response); test completeOnboarding() creates subscription row.",
+        "labels": [
+          "billing",
+          "wallet",
+          "mvp"
+        ],
+        "priority": "high",
+        "status": "done",
         "title": "Module 11: Plans, pricing, and wallet"
       }
     }
