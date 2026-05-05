@@ -1,4 +1,4 @@
-export type UserRole = 'learner' | 'admin'
+import type { UserRole } from '../schemas/user'
 
 export interface UserProfile {
   id: string
