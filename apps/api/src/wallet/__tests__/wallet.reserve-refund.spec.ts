@@ -5,7 +5,7 @@ const walletRow = { id: 'wallet-id', userId: 'user-id', balance: 10, bonusBalanc
 const reserveEntry = { id: 'ledger-reserve-id', walletId: 'wallet-id', amount: -2, balanceAfter: 8, idempotencyKey: 'reserve:test' }
 
 const mockPrisma = {
-  ledgerEntry: { findUnique: jest.fn(), create: jest.fn() },
+  ledgerEntry: { findUnique: jest.fn(), findUniqueOrThrow: jest.fn(), create: jest.fn() },
   wallet: { findUniqueOrThrow: jest.fn(), update: jest.fn() },
   $transaction: jest.fn(),
 }

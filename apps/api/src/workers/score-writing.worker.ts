@@ -88,7 +88,7 @@ export class ScoreWritingWorker extends WorkerHost {
           userId: submission.userId,
           skill: 'writing',
           overallBand,
-          rawAiResponse: scoring,
+          rawAiResponse: scoring as unknown as Parameters<typeof tx.scoreReport.create>[0]['data']['rawAiResponse'],
           isEstimate: true,
         },
       })

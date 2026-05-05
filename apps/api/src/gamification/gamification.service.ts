@@ -40,7 +40,7 @@ export class GamificationService {
         select: { skill: true },
       }),
       this.prisma.ledgerEntry.findMany({
-        where: { wallet: { userId }, type: 'bonus' },
+        where: { wallet: { userId }, type: 'grant' },
         select: { idempotencyKey: true },
       }),
     ])
@@ -90,7 +90,7 @@ export class GamificationService {
   private async countBonusGrantsInPeriod(userId: string, period: 'daily' | 'weekly'): Promise<number> {
     const since = this.startOf(period, new Date())
     return this.prisma.ledgerEntry.count({
-      where: { wallet: { userId }, type: 'bonus', createdAt: { gte: since } },
+      where: { wallet: { userId }, type: 'grant', createdAt: { gte: since } },
     })
   }
 

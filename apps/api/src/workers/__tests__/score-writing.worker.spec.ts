@@ -25,7 +25,7 @@ const mockScoringResult = {
 
 const mockPrisma = {
   scoreReport: { findUnique: jest.fn().mockResolvedValue(null), create: jest.fn().mockResolvedValue({ id: 'report-id' }) },
-  submission: { update: jest.fn(), findUniqueOrThrow: jest.fn().mockResolvedValue(mockSubmission) },
+  submission: { update: jest.fn(), findUniqueOrThrow: jest.fn().mockResolvedValue(mockSubmission), findUnique: jest.fn().mockResolvedValue(mockSubmission) },
   promptPack: { findFirstOrThrow: jest.fn().mockResolvedValue(mockPromptPack) },
   criterionRow: { create: jest.fn() },
   improvementTask: { create: jest.fn() },
@@ -43,6 +43,7 @@ const mockAnthropic = {
 }
 
 const mockWallet = { consume: jest.fn().mockResolvedValue({}), refund: jest.fn().mockResolvedValue({}) }
+const mockNotification = { sendReportReady: jest.fn().mockResolvedValue(undefined) }
 
 describe('ScoreWritingWorker', () => {
   let worker: ScoreWritingWorker
@@ -60,7 +61,7 @@ describe('ScoreWritingWorker', () => {
     mockWallet.consume.mockResolvedValue({})
     mockWallet.refund.mockResolvedValue({})
 
-    worker = new ScoreWritingWorker(mockPrisma as any, mockAnthropic as any, mockWallet as any)
+    worker = new ScoreWritingWorker(mockPrisma as any, mockAnthropic as any, mockWallet as any, mockNotification as any)
   })
 
   it('scores submission and consumes credits on success (AC-3)', async () => {
@@ -86,7 +87,7 @@ describe('ScoreWritingWorker', () => {
       opts: { attempts: 3 },
     } as any
     mockPrisma.submission.update.mockResolvedValue({})
-    mockPrisma.submission.findUnique = jest.fn().mockResolvedValue(mockSubmission)
+    mockPrisma.submission.findUnique.mockResolvedValue(mockSubmission)
 
     await worker.onFailed(job, new Error('AI API error'))
 

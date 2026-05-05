@@ -50,6 +50,7 @@ const mockAnthropic = {
 }
 
 const mockWallet = { consume: jest.fn().mockResolvedValue({}), refund: jest.fn().mockResolvedValue({}) }
+const mockNotification = { sendReportReady: jest.fn().mockResolvedValue(undefined) }
 
 describe('ScoreSpeakingWorker', () => {
   let worker: ScoreSpeakingWorker
@@ -69,7 +70,7 @@ describe('ScoreSpeakingWorker', () => {
     mockWallet.consume.mockResolvedValue({})
     mockWallet.refund.mockResolvedValue({})
 
-    worker = new ScoreSpeakingWorker(mockPrisma as any, mockAnthropic as any, mockWallet as any)
+    worker = new ScoreSpeakingWorker(mockPrisma as any, mockAnthropic as any, mockWallet as any, mockNotification as any)
   })
 
   it('scores transcript and consumes credits on success (AC-3)', async () => {
