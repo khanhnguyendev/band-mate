@@ -49,7 +49,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form method="post" onSubmit={handleSubmit}>
       <h1>Log in to Band Mate</h1>
       {error && <p role="alert">{error}</p>}
       <label>
