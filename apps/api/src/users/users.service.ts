@@ -24,8 +24,10 @@ export class UsersService {
     if (existing) return existing
 
     return this.prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
+      const user = await tx.user.upsert({
+        where: { supabaseUserId: supabaseUser.id },
+        update: {},
+        create: {
           supabaseUserId: supabaseUser.id,
           email: supabaseUser.email!,
           name: supabaseUser.user_metadata?.['name'] ?? supabaseUser.email!.split('@')[0],
@@ -33,8 +35,10 @@ export class UsersService {
         },
       })
 
-      await tx.wallet.create({
-        data: { userId: user.id, balance: 0, bonusBalance: 0 },
+      await tx.wallet.upsert({
+        where: { userId: user.id },
+        update: {},
+        create: { userId: user.id, balance: 0, bonusBalance: 0 },
       })
 
       return tx.user.findUniqueOrThrow({

@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Mascot } from '@/components/mascot/mascot'
+import { createClient } from '@/utils/supabase/client'
 
 type Skill = 'writing' | 'speaking' | 'reading' | 'listening'
 
@@ -35,16 +36,15 @@ export function OnboardingWizard() {
     setLoading(true)
     setError('')
     try {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/users/onboarding`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          targetBand,
-          testDate: testDate || undefined,
-          weakSkills,
-          motivation,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({ targetBand, testDate: testDate || undefined, weakSkills, motivation }),
       })
       if (!res.ok) throw new Error('Failed to save onboarding')
       router.push('/dashboard?welcome=1')
