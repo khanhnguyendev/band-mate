@@ -39,3 +39,22 @@ coverage/
 # Temporary files
 *.tmp
 *.bak
+
+# Turbo cache
+.turbo/
+
+# TypeScript incremental build
+*.tsbuildinfo
+
+# Agent skill cache (auto-downloaded, like node_modules)
+.agents/skills/
+
+# Knowns runtime state (generated, not source)
+.knowns/.search/
+.knowns/time.json
+
+# Design prototypes / HTML exports
+docs/prototype/
+
+# Supabase local (no local config tracked yet)
+supabase/
